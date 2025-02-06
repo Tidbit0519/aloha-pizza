@@ -1,2 +1,2 @@
-export { default as connectDB } from "./connectDB.js";
+export { default as dbConnect } from "./dbConnect.js";
 export { default as swaggerDocs } from "./swagger.js";
