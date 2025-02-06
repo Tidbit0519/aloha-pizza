@@ -1,17 +1,8 @@
-import { useState, useEffect } from "react";
 import { Box, Grid2 } from "@mui/material";
-import { getAllToppings } from "../services/toppingServices";
+import PropTypes from "prop-types";
 import ToppingsCard from "./ToppingsCard";
 
-const ToppingsList = () => {
-	const [toppings, setToppings] = useState([]);
-	useEffect(() => {
-		const fetchToppings = async () => {
-			const data = await getAllToppings();
-			setToppings(data);
-		};
-		fetchToppings();
-	}, []);
+const ToppingsList = ({ toppings, updateTopping }) => {
 	return (
 		<Box sx={{ mt: 2 }}>
 			<Grid2
@@ -23,12 +14,25 @@ const ToppingsList = () => {
 						key={topping._id}
 						size={{ xs: 6, sm: 4, md: 3 }}
 					>
-						<ToppingsCard name={topping.name} />
+						<ToppingsCard
+							id={topping._id}
+							name={topping.name}
+							updateTopping={updateTopping}
+						/>
 					</Grid2>
 				))}
 			</Grid2>
 		</Box>
 	);
+};
+ToppingsList.propTypes = {
+	toppings: PropTypes.arrayOf(
+		PropTypes.shape({
+			_id: PropTypes.string,
+			name: PropTypes.string,
+		})
+	).isRequired,
+	updateTopping: PropTypes.func.isRequired,
 };
 
 export default ToppingsList;

@@ -1,43 +1,85 @@
+import { useState } from "react";
 import {
 	Card,
 	CardContent,
 	CardActions,
-	Button,
+	IconButton,
 	Typography,
+	TextField,
 } from "@mui/material";
+import { Edit, Save, Delete, Cancel } from "@mui/icons-material";
 import PropTypes from "prop-types";
 
-const ToppingsCard = ({ name }) => {
+const ToppingsCard = ({ id, name, updateTopping }) => {
+	const [editing, setEditing] = useState(false);
+	const [toppingName, setToppingName] = useState(name);
+
+	const handleChange = (event) => {
+		setToppingName(event.target.value);
+	};
+
+	const handleEdit = () => {
+		setEditing(true);
+	};
+
+	const handleCancel = () => {
+		setEditing(false);
+		setToppingName(name);
+	};
+
+	const handleSubmit = (event) => {
+		event.preventDefault();
+		updateTopping({ id, name: toppingName });
+		setEditing(false);
+	};
+
 	return (
 		<Card>
 			<CardContent>
-				<Typography
-					variant="h5"
-					component="div"
-				>
-					{name}
-				</Typography>
+				{editing ? (
+					<form onSubmit={handleSubmit}>
+						<TextField
+							label="Topping Name"
+							variant="outlined"
+							value={toppingName}
+							onChange={handleChange}
+							fullWidth
+							required
+						/>
+					</form>
+				) : (
+					<Typography>{name}</Typography>
+				)}
 			</CardContent>
-			<CardActions>
-				<Button
-					size="small"
-					color="primary"
-				>
-					Edit
-				</Button>
-				<Button
-					size="small"
-					color="secondary"
-				>
-					Delete
-				</Button>
+			<CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
+				{editing ? (
+					<>
+						<IconButton onClick={handleSubmit}>
+							<Save color="success" />
+						</IconButton>
+						<IconButton onClick={handleCancel}>
+							<Cancel />
+						</IconButton>
+					</>
+				) : (
+					<>
+						<IconButton onClick={handleEdit}>
+							<Edit />
+						</IconButton>
+						<IconButton>
+							<Delete color="error" />
+						</IconButton>
+					</>
+				)}
 			</CardActions>
 		</Card>
 	);
 };
 
 ToppingsCard.propTypes = {
+	id: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
+	updateTopping: PropTypes.func.isRequired,
 };
 
 export default ToppingsCard;
