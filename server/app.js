@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import { swaggerDocs } from "./config/index.js";
-import { toppingRouter } from "./routes/index.js";
+import { toppingRouter, pizzaRouter } from "./routes/index.js";
 
 const app = express();
 app.use(cors());
@@ -14,5 +14,6 @@ app.get("/", (req, res) => {
     res.send("API is running");
 });
 app.use("/api/toppings", toppingRouter);
+app.use("/api/pizzas", pizzaRouter);
 
 export default app;

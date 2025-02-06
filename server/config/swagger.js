@@ -39,6 +39,59 @@ const swaggerOptions = {
                         name: 'pepperoni',
                     },
                 },
+                Pizza: {
+                    type: 'object',
+                    properties: {
+                        _id: {
+                            type: 'string',
+                            description: 'The auto-generated id of the Pizza',
+                        },
+                        name: {
+                            type: 'string',
+                            description: 'The name of the pizza',
+                        },
+                        toppings: {
+                            type: 'array',
+                            items: {
+                                $ref: '#/components/schemas/Topping',
+                            },
+                        },
+                    },
+                    example: {
+                        _id: '63f7bd0820bc1f431a4b91b2',
+                        name: 'pepperoni',
+                        toppings: [
+                            {
+                                _id: '63f7bd0820bc1f431a4b91b2',
+                                name: 'pepperoni',
+                            },
+                        ],
+                    },
+                },
+                PizzaInput: {
+                    type: 'object',
+                    required: ['name', 'toppings'],
+                    properties: {
+                        name: {
+                            type: 'string',
+                            description: 'Name of the pizza',
+                        },
+                        toppings: {
+                            type: 'array',
+                            items: {
+                                $ref: '#/components/schemas/ToppingInput',
+                            },
+                        },
+                    },
+                    example: {
+                        name: 'Pepperoni Pizza',
+                        toppings: [
+                            {
+                                _id: '63f7bd0820bc1f431a4b91b2',
+                            },
+                        ],
+                    },
+                },
             }
         },
     },
