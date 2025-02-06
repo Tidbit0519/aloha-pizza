@@ -14,6 +14,7 @@ const ToppingsPage = () => {
 		getAllToppings,
 		createTopping,
 		updateTopping,
+		deleteTopping,
 	} = useToppingApi();
 
 	useEffect(() => {
@@ -45,6 +46,7 @@ const ToppingsPage = () => {
 				<ToppingsList
 					toppings={toppings}
 					updateTopping={updateTopping}
+					deleteTopping={deleteTopping}
 				/>
 			)}
 

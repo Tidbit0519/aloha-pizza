@@ -10,7 +10,7 @@ import {
 import { Edit, Save, Delete, Cancel } from "@mui/icons-material";
 import PropTypes from "prop-types";
 
-const ToppingsCard = ({ id, name, updateTopping }) => {
+const ToppingsCard = ({ id, name, updateTopping, deleteTopping }) => {
 	const [editing, setEditing] = useState(false);
 	const [toppingName, setToppingName] = useState(name);
 
@@ -31,6 +31,10 @@ const ToppingsCard = ({ id, name, updateTopping }) => {
 		event.preventDefault();
 		updateTopping({ id, name: toppingName });
 		setEditing(false);
+	};
+
+	const handleDelete = () => {
+		deleteTopping(id);
 	};
 
 	return (
@@ -66,7 +70,7 @@ const ToppingsCard = ({ id, name, updateTopping }) => {
 						<IconButton onClick={handleEdit}>
 							<Edit />
 						</IconButton>
-						<IconButton>
+						<IconButton onClick={handleDelete}>
 							<Delete color="error" />
 						</IconButton>
 					</>
@@ -80,6 +84,7 @@ ToppingsCard.propTypes = {
 	id: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
 	updateTopping: PropTypes.func.isRequired,
+	deleteTopping: PropTypes.func.isRequired,
 };
 
 export default ToppingsCard;

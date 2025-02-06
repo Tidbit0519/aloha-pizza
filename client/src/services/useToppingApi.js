@@ -47,7 +47,20 @@ const useToppingApi = () => {
         }
     };
 
-    return { toppings, loading, error, getAllToppings, createTopping, updateTopping };
+    const deleteTopping = async (id) => {
+        setError(null);
+        try {
+            await axios.delete(`${API_URL}/toppings/${id}`);
+            setLoading(true);
+            setToppings(toppings.filter((topping) => topping._id !== id));
+        } catch (error) {
+            setError(error.response.data.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { toppings, loading, error, getAllToppings, createTopping, updateTopping, deleteTopping };
 };
 
 export default useToppingApi;

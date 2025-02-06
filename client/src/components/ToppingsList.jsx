@@ -2,7 +2,7 @@ import { Box, Grid2 } from "@mui/material";
 import PropTypes from "prop-types";
 import ToppingsCard from "./ToppingsCard";
 
-const ToppingsList = ({ toppings, updateTopping }) => {
+const ToppingsList = ({ toppings, updateTopping, deleteTopping }) => {
 	return (
 		<Box sx={{ mt: 2 }}>
 			<Grid2
@@ -18,6 +18,7 @@ const ToppingsList = ({ toppings, updateTopping }) => {
 							id={topping._id}
 							name={topping.name}
 							updateTopping={updateTopping}
+							deleteTopping={deleteTopping}
 						/>
 					</Grid2>
 				))}
@@ -33,6 +34,7 @@ ToppingsList.propTypes = {
 		})
 	).isRequired,
 	updateTopping: PropTypes.func.isRequired,
+	deleteTopping: PropTypes.func.isRequired,
 };
 
 export default ToppingsList;
