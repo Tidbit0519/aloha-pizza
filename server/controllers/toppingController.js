@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Topping } from "../models/index.js";
 
 const getAllToppings = async (req, res) => {
@@ -12,8 +13,11 @@ const getAllToppings = async (req, res) => {
 const createTopping = async (req, res) => {
     const { name } = req.body;
     try {
-        const toppingExists = await Topping.findOne({ name: name.toLowerCase() });
+        if (!name) {
+            return res.status(400).json({ message: 'Name is required' });
+        }
 
+        const toppingExists = await Topping.findOne({ name: name.toLowerCase() });
         if (toppingExists) {
             return res.status(400).json({ message: 'Topping already exists' });
         }
@@ -29,11 +33,19 @@ const updateTopping = async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
     try {
-        const topping = await Topping.findById(id);
+        if (!id || !name) {
+            return res.status(400).json({ message: 'Id and name are required' });
+        }
 
+        if (!mongoose.isValidObjectId(id)) {
+            return res.status(404).json({ message: 'Topping not found' });
+        }
+
+        const topping = await Topping.findById(id);
         if (!topping) {
             return res.status(404).json({ message: 'Topping not found' });
         }
+
         topping.name = name.toLowerCase();
         await topping.save();
         res.status(200).json(topping);
@@ -45,6 +57,10 @@ const updateTopping = async (req, res) => {
 const deleteTopping = async (req, res) => {
     const { id } = req.params;
     try {
+        if (!mongoose.isValidObjectId(id)) {
+            return res.status(404).json({ message: 'Topping not found' });
+        }
+
         const topping = await Topping.findByIdAndDelete(id);
         if (!topping) {
             return res.status(404).json({ message: 'Topping not found' });
