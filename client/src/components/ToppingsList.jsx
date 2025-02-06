@@ -1,10 +1,13 @@
-import { Box, Grid2 } from "@mui/material";
+import { Box, Grid2, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import ToppingsCard from "./ToppingsCard";
 
 const ToppingsList = ({ toppings, updateTopping, deleteTopping }) => {
 	return (
 		<Box sx={{ mt: 2 }}>
+			{toppings.length === 0 && (
+				<Typography color="textDisabled">No toppings available</Typography>
+			)}
 			<Grid2
 				container
 				spacing={2}
