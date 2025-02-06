@@ -1,10 +1,7 @@
-import dotenv from "dotenv";
 import request from "supertest";
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import app from "../app.js";
-
-dotenv.config();
 
 describe('Topping API', () => {
     beforeAll(async () => {
@@ -32,18 +29,18 @@ describe('Topping API', () => {
             expect(response.body.message).toBe('Name is required');
         });
 
-        it('should create a pineapple topping', async () => {
+        it('should create a mock topping', async () => {
             const response = await request(app)
                 .post('/api/toppings')
-                .send({ name: 'pineapple' });
+                .send({ name: 'mock topping' });
             expect(response.status).toBe(201);
-            expect(response.body.name).toBe('pineapple');
+            expect(response.body.name).toBe('mock topping');
         });
 
         it('should return an error if topping already exists', async () => {
             const response = await request(app)
                 .post('/api/toppings')
-                .send({ name: 'pineapple' });
+                .send({ name: 'mock topping' });
             expect(response.status).toBe(400);
             expect(response.body.message).toBe('Topping already exists');
         });
@@ -54,7 +51,7 @@ describe('Topping API', () => {
             const objId = new mongoose.Types.ObjectId()
             const response = await request(app).put(`/api/toppings/${objId}`)
             expect(response.status).toBe(400);
-            expect(response.body.message).toBe('Id and name are required');
+            expect(response.body.message).toBe('Name is required');
         });
 
         it('should return an error if id is invalid', async () => {
@@ -75,18 +72,27 @@ describe('Topping API', () => {
         });
 
         it('should update the topping if found', async () => {
-            const toppingObj = await request(app)
-                .post('/api/toppings')
-                .send({ name: 'mushroom' });
-            expect(toppingObj.status).toBe(201);
-            expect(toppingObj.body.name).toBe('mushroom');
+            const toppingList = await request(app).get('/api/toppings');
+            const toppingObj = toppingList.body[0];
 
-            const objId = toppingObj.body._id;
             const response = await request(app)
-                .put(`/api/toppings/${objId}`)
-                .send({ name: 'pepperoni' });
+                .put(`/api/toppings/${toppingList.body[0]._id}`)
+                .send({ name: 'mock topping' });
             expect(response.status).toBe(200);
-            expect(response.body.name).toBe('pepperoni');
+            expect(response.body.name).toBe('mock topping');
+        });
+
+        it('should return an error if topping already exists', async () => {
+            // Two existing toppings
+            const toppingList = await request(app).get('/api/toppings');
+            const toppingObj1 = toppingList.body[0];
+            const toppingObj2 = await request(app).post('/api/toppings').send({ name: 'mock topping 2' });
+
+            const response = await request(app)
+                .put(`/api/toppings/${toppingObj1._id}`)
+                .send({ name: 'mock topping 2' });
+            expect(response.status).toBe(400);
+            expect(response.body.message).toBe('Topping already exists');
         });
     });
 

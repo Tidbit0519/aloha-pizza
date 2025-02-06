@@ -33,8 +33,8 @@ const updateTopping = async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
     try {
-        if (!id || !name) {
-            return res.status(400).json({ message: 'Id and name are required' });
+        if (!name) {
+            return res.status(400).json({ message: 'Name is required' });
         }
 
         if (!mongoose.isValidObjectId(id)) {
@@ -44,6 +44,11 @@ const updateTopping = async (req, res) => {
         const topping = await Topping.findById(id);
         if (!topping) {
             return res.status(404).json({ message: 'Topping not found' });
+        }
+
+        const toppingExists = await Topping.findOne({ name: name.toLowerCase() });
+        if (toppingExists && toppingExists._id.toString() !== id) {
+            return res.status(400).json({ message: 'Topping already exists' });
         }
 
         topping.name = name.toLowerCase();
