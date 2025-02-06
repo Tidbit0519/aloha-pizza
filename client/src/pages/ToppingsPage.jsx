@@ -29,7 +29,12 @@ const ToppingsPage = () => {
 
 	return (
 		<Box>
-			<Typography>Toppings</Typography>
+			<Typography
+				variant="h4"
+				component="h1"
+			>
+				Toppings
+			</Typography>
 			<Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
 				<Button
 					variant="contained"
