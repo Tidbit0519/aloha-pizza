@@ -21,12 +21,15 @@ const Layout = () => {
 					</Typography>
 					<Box sx={{ marginLeft: 8 }} />
 					{pages.map((page) => (
+						// Mark button background darker if it's on the current page
 						<Button
 							key={page}
 							color="inherit"
 							variant="text"
 							sx={{
-								width: "100px",
+								width: 100,
+								backgroundColor:
+									page === "Toppings" ? "rgba(0, 0, 0, 0.1)" : "inherit",
 							}}
 							onClick={() => navigate(`/${page.toLowerCase()}`)}
 						>
