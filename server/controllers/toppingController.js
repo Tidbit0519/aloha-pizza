@@ -37,10 +37,6 @@ const updateTopping = async (req, res) => {
             return res.status(400).json({ message: 'Name is required' });
         }
 
-        if (!mongoose.isValidObjectId(id)) {
-            return res.status(404).json({ message: 'Topping not found' });
-        }
-
         const topping = await Topping.findById(id);
         if (!topping) {
             return res.status(404).json({ message: 'Topping not found' });
@@ -62,10 +58,6 @@ const updateTopping = async (req, res) => {
 const deleteTopping = async (req, res) => {
     const { id } = req.params;
     try {
-        if (!mongoose.isValidObjectId(id)) {
-            return res.status(404).json({ message: 'Topping not found' });
-        }
-
         const topping = await Topping.findByIdAndDelete(id);
         if (!topping) {
             return res.status(404).json({ message: 'Topping not found' });

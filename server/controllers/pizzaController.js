@@ -45,10 +45,6 @@ const updatePizza = async (req, res) => {
             return res.status(400).json({ message: 'Name and toppings are required' });
         }
 
-        if (!mongoose.isValidObjectId(id)) {
-            return res.status(404).json({ message: 'Pizza not found' });
-        }
-
         const pizza = await Pizza.findById(id);
         if (!pizza) {
             return res.status(404).json({ message: 'Pizza not found' });
@@ -79,10 +75,6 @@ const updatePizza = async (req, res) => {
 const deletePizza = async (req, res) => {
     const { id } = req.params;
     try {
-        if (!mongoose.isValidObjectId(id)) {
-            return res.status(404).json({ message: 'Pizza not found' });
-        }
-
         const pizza = await Pizza.findByIdAndDelete(id);
         if (!pizza) {
             return res.status(404).json({ message: 'Pizza not found' });
