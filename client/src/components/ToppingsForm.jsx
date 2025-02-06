@@ -16,12 +16,7 @@ const ToppingsForm = ({ createTopping }) => {
 
 	return (
 		<Box>
-			<Typography
-				variant="h4"
-				component="h1"
-			>
-				Add Topping
-			</Typography>
+			<Typography variant="h6">Add Topping</Typography>
 			<form onSubmit={handleSubmit}>
 				<TextField
 					label="Topping Name"
@@ -48,7 +43,6 @@ const ToppingsForm = ({ createTopping }) => {
 
 ToppingsForm.propTypes = {
 	createTopping: PropTypes.func.isRequired,
-	updateTopping: PropTypes.func.isRequired,
 };
 
 export default ToppingsForm;
