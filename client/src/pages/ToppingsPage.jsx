@@ -10,7 +10,6 @@ const ToppingsPage = () => {
 	const {
 		toppings,
 		loading,
-		error,
 		getAllToppings,
 		createTopping,
 		updateTopping,
@@ -21,11 +20,14 @@ const ToppingsPage = () => {
 		getAllToppings();
 	}, []);
 
-	useEffect(() => {
-		if (error) {
+	const handleCreateTopping = async (topping) => {
+		try {
+			await createTopping(topping);
+			setOpen(false);
+		} catch (error) {
 			alert(error);
 		}
-	}, [error]);
+	};
 
 	return (
 		<Box>
@@ -69,12 +71,10 @@ const ToppingsPage = () => {
 						bgcolor: "background.paper",
 						boxShadow: 24,
 						p: 4,
+						borderRadius: 2,
 					}}
 				>
-					<ToppingsForm
-						createTopping={createTopping}
-						updateTopping={updateTopping}
-					/>
+					<ToppingsForm createTopping={handleCreateTopping} />
 				</Box>
 			</Modal>
 		</Box>
