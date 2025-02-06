@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Pizza } from "../models/index.js";
+import { Pizza, Topping } from "../models/index.js";
 
 const getAllPizzas = async (req, res) => {
     try {
@@ -20,6 +20,14 @@ const createPizza = async (req, res) => {
         const pizzaExists = await Pizza.findOne({ name: name.toLowerCase() });
         if (pizzaExists) {
             return res.status(400).json({ message: 'Pizza already exists' });
+        }
+
+        const toppingsArray = Array.isArray(toppings) ? toppings : [toppings];
+        for (let topping of toppingsArray) {
+            const toppingExists = await Topping.findById(topping);
+            if (!toppingExists) {
+                return res.status(400).json({ message: 'Topping not found' });
+            }
         }
 
         const newPizza = await Pizza.create({ name: name.toLowerCase(), toppings });
@@ -47,8 +55,16 @@ const updatePizza = async (req, res) => {
         }
 
         const pizzaExists = await Pizza.findOne({ name: name.toLowerCase() });
-        if (pizzaExists) {
+        if (pizzaExists && pizzaExists._id.toString() !== id) {
             return res.status(400).json({ message: 'Pizza already exists' });
+        }
+
+        const toppingsArray = Array.isArray(toppings) ? toppings : [toppings];
+        for (let topping of toppingsArray) {
+            const toppingExists = await Topping.findById(topping);
+            if (!toppingExists) {
+                return res.status(400).json({ message: 'Topping not found' });
+            }
         }
 
         pizza.name = name.toLowerCase();
