@@ -29,6 +29,7 @@ const useToppingApi = () => {
             setToppings([...toppings, response.data]);
         } catch (error) {
             setError(error.response.data.message);
+            throw error.response.data.message;
         } finally {
             setLoading(false);
         }
@@ -42,6 +43,7 @@ const useToppingApi = () => {
             setToppings(toppings.map((topping) => topping._id === id ? response.data : topping));
         } catch (error) {
             setError(error.response.data.message);
+            throw error.response.data.message;
         } finally {
             setLoading(false);
         }
