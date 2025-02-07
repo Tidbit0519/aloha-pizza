@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Box, Typography, Button, Modal } from "@mui/material";
 import usePizzaApi from "../services/usePizzaApi";
+import useToppingApi from "../services/useToppingApi";
 import AddIcon from "@mui/icons-material/Add";
 import PizzaList from "../components/PizzaList";
 import PizzaForm from "../components/PizzaForm";
@@ -15,9 +16,11 @@ const PizzaPage = () => {
 		updatePizza,
 		deletePizza,
 	} = usePizzaApi();
+	const { toppings, getAllToppings } = useToppingApi();
 
 	useEffect(() => {
 		getAllPizzas();
+		getAllToppings();
 	}, []);
 
 	const handleCreatePizza = async (pizza) => {
@@ -73,7 +76,10 @@ const PizzaPage = () => {
 						p: 4,
 					}}
 				>
-					<PizzaForm createPizza={handleCreatePizza} />
+					<PizzaForm
+						createPizza={handleCreatePizza}
+						toppings={toppings}
+					/>
 				</Box>
 			</Modal>
 		</Box>

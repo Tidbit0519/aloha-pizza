@@ -21,10 +21,10 @@ const usePizzaApi = () => {
         }
     };
 
-    const createPizza = async ({ name, description, price, toppings }) => {
+    const createPizza = async ({ name, toppings }) => {
         setError(null);
         try {
-            const response = await axios.post(`${API_URL}/pizzas`, { name, description, price, toppings });
+            const response = await axios.post(`${API_URL}/pizzas`, { name, toppings });
             setLoading(true);
             setPizzas([...pizzas, response.data]);
         } catch (error) {
