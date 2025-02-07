@@ -15,7 +15,7 @@ const useToppingApi = () => {
             setLoading(true);
             setToppings(response.data);
         } catch (error) {
-            setError(error.response.data.message);
+            setError(error.response?.data.message);
         } finally {
             setLoading(false);
         }
