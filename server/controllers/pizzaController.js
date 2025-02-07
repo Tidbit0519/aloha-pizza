@@ -17,8 +17,9 @@ const createPizza = async (req, res) => {
             return res.status(400).json({ message: 'Name and toppings are required' });
         }
 
-        const pizzaExists = await Pizza.findOne({ name: name.toLowerCase() });
+        const pizzaExists = await Pizza.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
         if (pizzaExists) {
+            console.log(pizzaExists);
             return res.status(400).json({ message: 'Pizza already exists' });
         }
 
@@ -50,18 +51,18 @@ const updatePizza = async (req, res) => {
             return res.status(404).json({ message: 'Pizza not found' });
         }
 
-        const pizzaExists = await Pizza.findOne({ name: name.toLowerCase() });
+        const pizzaExists = await Pizza.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
         if (pizzaExists && pizzaExists._id.toString() !== id) {
             return res.status(400).json({ message: 'Pizza already exists' });
         }
 
-        const toppingsArray = Array.isArray(toppings) ? toppings : [toppings];
-        for (let topping of toppingsArray) {
+        toppings.forEach(async (topping) => {
             const toppingExists = await Topping.findById(topping);
-            if (!toppingExists) {
-                return res.status(400).json({ message: 'Topping not found' });
+            if (!toppingExists.pizzas.includes(pizza._id)) {
+                toppingExists.pizzas.push(pizza._id);
+                await toppingExists.save();
             }
-        }
+        });
 
         pizza.name = name;
         pizza.toppings = toppings;

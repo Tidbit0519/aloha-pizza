@@ -17,7 +17,7 @@ const createTopping = async (req, res) => {
             return res.status(400).json({ message: 'Name is required' });
         }
 
-        const toppingExists = await Topping.findOne({ name: name.toLowerCase() });
+        const toppingExists = await Topping.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
         if (toppingExists) {
             return res.status(400).json({ message: 'Topping already exists' });
         }
@@ -42,7 +42,7 @@ const updateTopping = async (req, res) => {
             return res.status(404).json({ message: 'Topping not found' });
         }
 
-        const toppingExists = await Topping.findOne({ name: name.toLowerCase() });
+        const toppingExists = await Topping.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
         if (toppingExists && toppingExists._id.toString() !== id) {
             return res.status(400).json({ message: 'Topping already exists' });
         }
