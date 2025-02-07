@@ -17,6 +17,7 @@ const PizzaPage = () => {
 		deletePizza,
 	} = usePizzaApi();
 	const { toppings, getAllToppings } = useToppingApi();
+	const [selectedPizza, setSelectedPizza] = useState(null);
 
 	useEffect(() => {
 		getAllPizzas();
@@ -32,6 +33,25 @@ const PizzaPage = () => {
 		}
 	};
 
+	const handleCreatePizzaForm = () => {
+		setSelectedPizza(null);
+		setOpen(true);
+	};
+
+	const handleUpdatePizza = async (pizza) => {
+		try {
+			await updatePizza(pizza);
+			setOpen(false);
+		} catch (error) {
+			alert(error);
+		}
+	};
+
+	const handleUpdatePizzaForm = (pizza) => {
+		setSelectedPizza(pizza);
+		setOpen(true);
+	};
+
 	return (
 		<Box>
 			<Typography
@@ -45,7 +65,7 @@ const PizzaPage = () => {
 					variant="contained"
 					color="primary"
 					startIcon={<AddIcon />}
-					onClick={() => setOpen(true)}
+					onClick={handleCreatePizzaForm}
 				>
 					Add Pizza
 				</Button>
@@ -55,7 +75,7 @@ const PizzaPage = () => {
 			) : (
 				<PizzaList
 					pizzas={pizzas}
-					updatePizza={updatePizza}
+					handlePizzaForm={handleUpdatePizzaForm}
 					deletePizza={deletePizza}
 				/>
 			)}
@@ -77,6 +97,8 @@ const PizzaPage = () => {
 					}}
 				>
 					<PizzaForm
+						currentPizza={selectedPizza}
+						updatePizza={handleUpdatePizza}
 						createPizza={handleCreatePizza}
 						toppings={toppings}
 					/>

@@ -9,9 +9,11 @@ import {
 	Grid2,
 } from "@mui/material";
 
-const PizzaForm = ({ createPizza, toppings }) => {
-	const [pizzaName, setPizzaName] = useState("");
-	const [selectedToppings, setSelectedToppings] = useState([]);
+const PizzaForm = ({ currentPizza, updatePizza, createPizza, toppings }) => {
+	const [pizzaName, setPizzaName] = useState(currentPizza.name || "");
+	const [selectedToppings, setSelectedToppings] = useState(
+		currentPizza.toppings || []
+	);
 
 	const handleSelectTopping = (topping) => {
 		if (selectedToppings.includes(topping._id)) {
@@ -27,12 +29,23 @@ const PizzaForm = ({ createPizza, toppings }) => {
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		createPizza({ name: pizzaName, toppings: selectedToppings });
+		if (currentPizza) {
+			updatePizza({
+				id: currentPizza.id,
+				name: pizzaName,
+				toppings: selectedToppings,
+			});
+		} else {
+			createPizza({ name: pizzaName, toppings: selectedToppings });
+		}
 	};
 
 	return (
 		<Box>
-			<Typography variant="h6">Add Pizza</Typography>
+			<Typography variant="h6">
+				{" "}
+				{currentPizza ? "Edit Pizza" : "Add Pizza"} Pizza
+			</Typography>
 			<form onSubmit={handleSubmit}>
 				<TextField
 					label="Pizza Name"
@@ -76,7 +89,7 @@ const PizzaForm = ({ createPizza, toppings }) => {
 						variant="contained"
 						color="primary"
 					>
-						Add
+						{currentPizza ? "Update" : "Create"}
 					</Button>
 				</Box>
 			</form>
@@ -85,6 +98,12 @@ const PizzaForm = ({ createPizza, toppings }) => {
 };
 
 PizzaForm.propTypes = {
+	currentPizza: PropTypes.shape({
+		id: PropTypes.string,
+		name: PropTypes.string,
+		toppings: PropTypes.arrayOf(PropTypes.string),
+	}),
+	updatePizza: PropTypes.func.isRequired,
 	createPizza: PropTypes.func.isRequired,
 	toppings: PropTypes.arrayOf(
 		PropTypes.shape({

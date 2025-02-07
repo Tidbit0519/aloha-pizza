@@ -2,7 +2,7 @@ import { Box, Grid2, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import PizzaCard from "./PizzaCard";
 
-const PizzaList = ({ pizzas, updatePizza, deletePizza }) => {
+const PizzaList = ({ pizzas, handlePizzaForm, deletePizza }) => {
 	return (
 		<Box sx={{ mt: 2 }}>
 			{pizzas.length === 0 && (
@@ -21,7 +21,7 @@ const PizzaList = ({ pizzas, updatePizza, deletePizza }) => {
 							id={pizza._id}
 							name={pizza.name}
 							toppings={pizza.toppings}
-							updatePizza={updatePizza}
+							handlePizzaForm={handlePizzaForm}
 							deletePizza={deletePizza}
 						/>
 					</Grid2>
@@ -37,7 +37,7 @@ PizzaList.propTypes = {
 			name: PropTypes.string,
 		})
 	).isRequired,
-	updatePizza: PropTypes.func.isRequired,
+	handlePizzaForm: PropTypes.func.isRequired,
 	deletePizza: PropTypes.func.isRequired,
 };
 

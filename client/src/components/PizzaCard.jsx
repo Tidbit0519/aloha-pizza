@@ -8,31 +8,13 @@ import {
 	Chip,
 	IconButton,
 	Typography,
-	TextField,
 	Modal,
 } from "@mui/material";
-import { Edit, Save, Delete, Cancel } from "@mui/icons-material";
+import { Edit, Delete } from "@mui/icons-material";
 import PropTypes from "prop-types";
 
-const PizzaCard = ({ id, name, toppings, updatePizza, deletePizza }) => {
-	const [editing, setEditing] = useState(false);
-	const [pizzaName, setPizzaName] = useState(name);
+const PizzaCard = ({ id, name, toppings, handlePizzaForm, deletePizza }) => {
 	const [open, setOpen] = useState(false);
-
-	const handleCancel = () => {
-		setEditing(false);
-		setPizzaName(name);
-	};
-
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-		try {
-			await updatePizza({ id, name: pizzaName });
-			setEditing(false);
-		} catch (error) {
-			alert(error);
-		}
-	};
 
 	const handleDelete = () => {
 		deletePizza(id);
@@ -42,20 +24,7 @@ const PizzaCard = ({ id, name, toppings, updatePizza, deletePizza }) => {
 		<>
 			<Card>
 				<CardContent>
-					{editing ? (
-						<form onSubmit={handleSubmit}>
-							<TextField
-								label="Pizza Name"
-								variant="outlined"
-								value={pizzaName}
-								onChange={(event) => setPizzaName(event.target.value)}
-								fullWidth
-								required
-							/>
-						</form>
-					) : (
-						<Typography>{name}</Typography>
-					)}
+					<Typography>{name}</Typography>
 					<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 2 }}>
 						{toppings.map((topping) => (
 							<Chip
@@ -67,25 +36,18 @@ const PizzaCard = ({ id, name, toppings, updatePizza, deletePizza }) => {
 				</CardContent>
 				<CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
 					<Box>
-						{editing ? (
-							<>
-								<IconButton onClick={handleSubmit}>
-									<Save color="success" />
-								</IconButton>
-								<IconButton onClick={handleCancel}>
-									<Cancel />
-								</IconButton>
-							</>
-						) : (
-							<>
-								<IconButton onClick={() => setEditing(true)}>
-									<Edit />
-								</IconButton>
-								<IconButton onClick={() => setOpen(true)}>
-									<Delete color="error" />
-								</IconButton>
-							</>
-						)}
+						<IconButton
+							onClick={() => {
+								const toppingIds = toppings.map((t) => t._id);
+								const pizza = { id, name, toppings: toppingIds };
+								handlePizzaForm(pizza);
+							}}
+						>
+							<Edit />
+						</IconButton>
+						<IconButton onClick={() => setOpen(true)}>
+							<Delete color="error" />
+						</IconButton>
 					</Box>
 				</CardActions>
 			</Card>
@@ -147,7 +109,7 @@ PizzaCard.propTypes = {
 			name: PropTypes.string,
 		})
 	).isRequired,
-	updatePizza: PropTypes.func.isRequired,
+	handlePizzaForm: PropTypes.func.isRequired,
 	deletePizza: PropTypes.func.isRequired,
 };
 

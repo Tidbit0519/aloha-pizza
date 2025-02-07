@@ -35,12 +35,12 @@ const usePizzaApi = () => {
         }
     };
 
-    const updatePizza = async ({ id, name, description, price, toppings }) => {
+    const updatePizza = async ({ id, name, toppings }) => {
         setError(null);
         try {
-            const response = await axios.put(`${API_URL}/pizzas/${id}`, { name, description, price, toppings });
+            await axios.put(`${API_URL}/pizzas/${id}`, { name, toppings });
             setLoading(true);
-            setPizzas(pizzas.map((pizza) => pizza._id === id ? response.data : pizza));
+            getAllPizzas();
         } catch (error) {
             setError(error.response.data.message);
             throw error.response.data.message;
