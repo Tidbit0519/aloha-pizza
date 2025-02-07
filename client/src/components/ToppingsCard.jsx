@@ -59,19 +59,31 @@ const ToppingsCard = ({ id, name, updateTopping, deleteTopping }) => {
 				<CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
 					{editing ? (
 						<>
-							<IconButton onClick={handleSubmit}>
+							<IconButton
+								onClick={handleSubmit}
+								data-testid="save"
+							>
 								<Save color="success" />
 							</IconButton>
-							<IconButton onClick={handleCancel}>
+							<IconButton
+								onClick={handleCancel}
+								data-testid="cancel"
+							>
 								<Cancel />
 							</IconButton>
 						</>
 					) : (
 						<>
-							<IconButton onClick={() => setEditing(true)}>
+							<IconButton
+								onClick={() => setEditing(true)}
+								data-testid="edit"
+							>
 								<Edit />
 							</IconButton>
-							<IconButton onClick={() => setOpen(true)}>
+							<IconButton
+								onClick={() => setOpen(true)}
+								data-testid="delete"
+							>
 								<Delete color="error" />
 							</IconButton>
 						</>
