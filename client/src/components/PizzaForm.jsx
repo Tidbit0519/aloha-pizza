@@ -52,7 +52,7 @@ const PizzaForm = ({
 		<Modal
 			open={open}
 			onClose={() => setOpen(false)}
-			data-testid="add-pizza-modal"
+			data-testid="pizza-modal"
 		>
 			<Box
 				sx={{
