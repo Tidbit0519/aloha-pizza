@@ -24,9 +24,9 @@ const usePizzaApi = () => {
     const createPizza = async ({ name, toppings }) => {
         setError(null);
         try {
-            const response = await axios.post(`${API_URL}/pizzas`, { name, toppings });
+            await axios.post(`${API_URL}/pizzas`, { name, toppings });
             setLoading(true);
-            setPizzas([...pizzas, response.data]);
+            getAllPizzas();
         } catch (error) {
             setError(error.response.data.message);
             throw error.response.data.message;
