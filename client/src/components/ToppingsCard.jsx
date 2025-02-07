@@ -61,13 +61,13 @@ const ToppingsCard = ({ id, name, updateTopping, deleteTopping }) => {
 						<>
 							<IconButton
 								onClick={handleSubmit}
-								data-testid="save"
+								data-testid={`save-btn-${id}`}
 							>
 								<Save color="success" />
 							</IconButton>
 							<IconButton
 								onClick={handleCancel}
-								data-testid="cancel"
+								data-testid={`cancel-btn-${id}`}
 							>
 								<Cancel />
 							</IconButton>
@@ -76,13 +76,13 @@ const ToppingsCard = ({ id, name, updateTopping, deleteTopping }) => {
 						<>
 							<IconButton
 								onClick={() => setEditing(true)}
-								data-testid="edit"
+								data-testid={`edit-btn-${id}`}
 							>
 								<Edit />
 							</IconButton>
 							<IconButton
 								onClick={() => setOpen(true)}
-								data-testid="delete"
+								data-testid={`delete-btn-${id}`}
 							>
 								<Delete color="error" />
 							</IconButton>
