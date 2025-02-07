@@ -20,6 +20,7 @@ const PizzaList = ({ pizzas, updatePizza, deletePizza }) => {
 						<PizzaCard
 							id={pizza._id}
 							name={pizza.name}
+							toppings={pizza.toppings}
 							updatePizza={updatePizza}
 							deletePizza={deletePizza}
 						/>
