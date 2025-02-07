@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 
-const pages = ["Toppings", "Pizzas"];
+const pages = ["Toppings", "Pizza"];
 
 const Layout = () => {
 	const navigate = useNavigate();
@@ -29,7 +29,9 @@ const Layout = () => {
 							sx={{
 								width: 100,
 								backgroundColor:
-									page === "Toppings" ? "rgba(0, 0, 0, 0.1)" : "inherit",
+									window.location.pathname === `/${page.toLowerCase()}`
+										? "rgba(0, 0, 0, 0.1)"
+										: "transparent",
 							}}
 							onClick={() => navigate(`/${page.toLowerCase()}`)}
 						>
