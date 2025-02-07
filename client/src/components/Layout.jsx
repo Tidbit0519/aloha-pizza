@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 
-const pages = ["Toppings", "Pizza"];
+const pages = ["Pizza", "Toppings"];
 
 const Layout = () => {
 	const navigate = useNavigate();
