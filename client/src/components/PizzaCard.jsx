@@ -37,6 +37,7 @@ const PizzaCard = ({ id, name, toppings, handlePizzaForm, deletePizza }) => {
 				<CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
 					<Box>
 						<IconButton
+							data-testid={`edit-btn-${id}`}
 							onClick={() => {
 								const toppingIds = toppings.map((t) => t._id);
 								const pizza = { id, name, toppings: toppingIds };
@@ -45,7 +46,10 @@ const PizzaCard = ({ id, name, toppings, handlePizzaForm, deletePizza }) => {
 						>
 							<Edit />
 						</IconButton>
-						<IconButton onClick={() => setOpen(true)}>
+						<IconButton
+							data-testid={`delete-btn-${id}`}
+							onClick={() => setOpen(true)}
+						>
 							<Delete color="error" />
 						</IconButton>
 					</Box>
