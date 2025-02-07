@@ -10,9 +10,9 @@ import {
 } from "@mui/material";
 
 const PizzaForm = ({ currentPizza, updatePizza, createPizza, toppings }) => {
-	const [pizzaName, setPizzaName] = useState(currentPizza.name || "");
+	const [pizzaName, setPizzaName] = useState(currentPizza?.name || "");
 	const [selectedToppings, setSelectedToppings] = useState(
-		currentPizza.toppings || []
+		currentPizza?.toppings || []
 	);
 
 	const handleSelectTopping = (topping) => {
