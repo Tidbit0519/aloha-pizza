@@ -6,37 +6,18 @@ import {
 	CardContent,
 	CardActions,
 	Chip,
-	Collapse,
 	IconButton,
 	Typography,
 	TextField,
 	Modal,
-	styled,
 } from "@mui/material";
-import { Edit, Save, Delete, Cancel, ExpandMore } from "@mui/icons-material";
+import { Edit, Save, Delete, Cancel } from "@mui/icons-material";
 import PropTypes from "prop-types";
-
-const ExpandMoreIcon = styled((props) => {
-	// eslint-disable-next-line no-unused-vars
-	const { expand, ...other } = props;
-	return <ExpandMore {...other} />;
-})(({ theme, expand }) => ({
-	transform: expand ? "rotate(180deg)" : "rotate(0deg)",
-	marginLeft: "auto",
-	transition: theme.transitions.create("transform", {
-		duration: theme.transitions.duration.shortest,
-	}),
-}));
 
 const PizzaCard = ({ id, name, toppings, updatePizza, deletePizza }) => {
 	const [editing, setEditing] = useState(false);
 	const [pizzaName, setPizzaName] = useState(name);
 	const [open, setOpen] = useState(false);
-	const [expanded, setExpanded] = useState(false);
-
-	const handleExpandClick = () => {
-		setExpanded(!expanded);
-	};
 
 	const handleCancel = () => {
 		setEditing(false);
@@ -75,8 +56,16 @@ const PizzaCard = ({ id, name, toppings, updatePizza, deletePizza }) => {
 					) : (
 						<Typography>{name}</Typography>
 					)}
+					<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 2 }}>
+						{toppings.map((topping) => (
+							<Chip
+								key={`${id}-${topping._id}`}
+								label={topping.name}
+							/>
+						))}
+					</Box>
 				</CardContent>
-				<CardActions sx={{ display: "flex", justifyContent: "space-between" }}>
+				<CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
 					<Box>
 						{editing ? (
 							<>
@@ -98,37 +87,7 @@ const PizzaCard = ({ id, name, toppings, updatePizza, deletePizza }) => {
 							</>
 						)}
 					</Box>
-					<IconButton
-						onClick={handleExpandClick}
-						aria-expanded={expanded}
-						aria-label="show more"
-					>
-						<ExpandMoreIcon expand={expanded} />
-					</IconButton>
 				</CardActions>
-				<Collapse
-					in={expanded}
-					timeout="auto"
-					unmountOnExit
-				>
-					<CardContent>
-						<Typography
-							variant="caption"
-							fontWeight={"bold"}
-						>
-							Toppings:
-						</Typography>
-						<Box sx={{ display: "flex", flexWrap: "wrap" }}>
-							{toppings.map((topping) => (
-								<Chip
-									key={topping._id}
-									label={topping.name}
-									sx={{ mr: 1, mt: 1 }}
-								/>
-							))}
-						</Box>
-					</CardContent>
-				</Collapse>
 			</Card>
 
 			<Modal
