@@ -1,18 +1,18 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import { MemoryRouter } from "react-router-dom";
+import App from "../../App";
 import LandingPage from "../../pages/LandingPage";
 
 describe("LandingPage", () => {
-	beforeEach(() => {
-		render(<LandingPage />, {
-			wrapper: ({ children }) => (
-				<MemoryRouter initialEntries={["/"]}>{children}</MemoryRouter>
+	it("renders the LandingPage with title and buttons with the right links", () => {
+		render(<App />, {
+			wrapper: () => (
+				<MemoryRouter initialEntries={["/"]}>
+					<LandingPage />
+				</MemoryRouter>
 			),
 		});
-	});
-
-	it("renders the LandingPage with title and buttons with the right links", () => {
 		expect(screen.getByText("Welcome to Aloha Pizza!")).toBeInTheDocument();
 
 		const browsePizzaButton = screen.getByRole("link", {
