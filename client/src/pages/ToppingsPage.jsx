@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, Typography, Button, Modal } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import useToppingApi from "../services/useToppingApi";
 import AddIcon from "@mui/icons-material/Add";
 import ToppingsList from "../components/ToppingsList";
@@ -56,27 +56,11 @@ const ToppingsPage = () => {
 					deleteTopping={deleteTopping}
 				/>
 			)}
-
-			<Modal
+			<ToppingsForm
 				open={open}
-				onClose={() => setOpen(false)}
-			>
-				<Box
-					sx={{
-						position: "absolute",
-						top: "50%",
-						left: "50%",
-						transform: "translate(-50%, -50%)",
-						width: 400,
-						bgcolor: "background.paper",
-						boxShadow: 24,
-						p: 4,
-						borderRadius: 2,
-					}}
-				>
-					<ToppingsForm createTopping={handleCreateTopping} />
-				</Box>
-			</Modal>
+				setOpen={setOpen}
+				createTopping={handleCreateTopping}
+			/>
 		</Box>
 	);
 };
