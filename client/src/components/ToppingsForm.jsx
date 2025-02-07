@@ -38,6 +38,7 @@ const ToppingsForm = ({ open, setOpen, createTopping }) => {
 					<form onSubmit={handleSubmit}>
 						<TextField
 							label="Topping Name"
+							data-testid="topping-name-input"
 							variant="outlined"
 							value={toppingName}
 							onChange={handleChange}

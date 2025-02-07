@@ -13,12 +13,18 @@ describe("ToppingsPage", () => {
 		expect(screen.getByText("Add Topping")).toBeInTheDocument();
 	});
 
-	it("opens the add topping modal when Add Topping is clicked", async () => {
+	it("opens the add topping modal when Add Topping is clicked and closed wheen cancel is clicked", async () => {
 		expect(screen.queryByTestId("add-topping-modal")).not.toBeInTheDocument();
 		const addButton = screen.getByRole("button", { name: /Add Topping/i });
 		userEvent.click(addButton);
 		await waitFor(() => {
 			expect(screen.getByTestId("add-topping-modal")).toBeInTheDocument();
+		});
+
+		const closeButton = screen.getByRole("button", { name: /cancel/i });
+		userEvent.click(closeButton);
+		await waitFor(() => {
+			expect(screen.queryByTestId("add-topping-modal")).not.toBeInTheDocument();
 		});
 	});
 });
