@@ -49,7 +49,7 @@ describe("ToppingsCard", () => {
 		});
 	});
 
-	it("renders the ToppingsCard with updated name", async () => {
+	it("called the update callback if edit button is clicked", async () => {
 		userEvent.click(screen.getByTestId(`edit-btn-${mockToppingCardProps.id}`));
 		await waitFor(() => {
 			expect(screen.getByRole("textbox")).toBeInTheDocument();
@@ -68,19 +68,9 @@ describe("ToppingsCard", () => {
 				name: "Topping 1 Updated",
 			});
 		});
-
-		render(
-			<ToppingsCard
-				id={mockToppingCardProps.id}
-				name="Topping 1 Updated"
-				updateTopping={async (data) => await mockUpdateTopping(data)}
-				deleteTopping={() => {}}
-			/>
-		);
-		expect(screen.getByText("Topping 1 Updated")).toBeInTheDocument();
 	});
 
-	it("deletes the ToppingsCard from the list", async () => {
+	it("calls the delete callback when delete button is clicked", async () => {
 		userEvent.click(
 			screen.getByTestId(`delete-btn-${mockToppingCardProps.id}`)
 		);

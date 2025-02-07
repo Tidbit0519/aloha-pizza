@@ -13,18 +13,18 @@ describe("PizzaPage", () => {
 		expect(screen.getByText("Add Pizza")).toBeInTheDocument();
 	});
 
-	it("opens the add pizza modal when Add Pizza is clicked and closed when cancel is clicked", async () => {
-		expect(screen.queryByTestId("add-pizza-modal")).not.toBeInTheDocument();
+	it("opens the pizza modal when Add Pizza is clicked and closed when cancel is clicked", async () => {
+		expect(screen.queryByTestId("pizza-modal")).not.toBeInTheDocument();
 		const addButton = screen.getByRole("button", { name: /Add Pizza/i });
 		userEvent.click(addButton);
 		await waitFor(() => {
-			expect(screen.getByTestId("add-pizza-modal")).toBeInTheDocument();
+			expect(screen.getByTestId("pizza-modal")).toBeInTheDocument();
 		});
 
 		const closeButton = screen.getByRole("button", { name: /cancel/i });
 		userEvent.click(closeButton);
 		await waitFor(() => {
-			expect(screen.queryByTestId("add-pizza-modal")).not.toBeInTheDocument();
+			expect(screen.queryByTestId("pizza-modal")).not.toBeInTheDocument();
 		});
 	});
 });
