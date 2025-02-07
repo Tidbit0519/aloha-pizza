@@ -21,7 +21,7 @@ const createTopping = async (req, res) => {
         if (toppingExists) {
             return res.status(400).json({ message: 'Topping already exists' });
         }
-        const newTopping = new Topping({ name: name.toLowerCase() });
+        const newTopping = new Topping({ name: name });
         await newTopping.save();
         res.status(201).json(newTopping);
     } catch (error) {
@@ -47,7 +47,7 @@ const updateTopping = async (req, res) => {
             return res.status(400).json({ message: 'Topping already exists' });
         }
 
-        topping.name = name.toLowerCase();
+        topping.name = name;
         await topping.save();
         res.status(200).json(topping);
     } catch (error) {

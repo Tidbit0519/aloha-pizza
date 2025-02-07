@@ -30,7 +30,7 @@ const createPizza = async (req, res) => {
             }
         }
 
-        const newPizza = await Pizza.create({ name: name.toLowerCase(), toppings });
+        const newPizza = await Pizza.create({ name: name, toppings });
         res.status(201).json(newPizza);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -63,7 +63,7 @@ const updatePizza = async (req, res) => {
             }
         }
 
-        pizza.name = name.toLowerCase();
+        pizza.name = name;
         pizza.toppings = toppings;
         await pizza.save();
         res.status(200).json(pizza);
