@@ -1,12 +1,17 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
-import ToppingsPage from "./pages/ToppingsPage";
+import LandingPage from "./pages/LandingPage";
 import PizzaPage from "./pages/PizzaPage";
+import ToppingsPage from "./pages/ToppingsPage";
 
 function App() {
 	return (
 		<Routes>
 			<Route element={<Layout />}>
+				<Route
+					path="/"
+					element={<LandingPage />}
+				/>
 				<Route
 					path="/toppings"
 					element={<ToppingsPage />}
