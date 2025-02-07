@@ -44,7 +44,7 @@ const PizzaForm = ({ currentPizza, updatePizza, createPizza, toppings }) => {
 		<Box>
 			<Typography variant="h6">
 				{" "}
-				{currentPizza ? "Edit Pizza" : "Add Pizza"} Pizza
+				{currentPizza ? "Edit Pizza" : "Add Pizza"}
 			</Typography>
 			<form onSubmit={handleSubmit}>
 				<TextField
