@@ -7,9 +7,17 @@ import {
 	TextField,
 	Checkbox,
 	Grid2,
+	Modal,
 } from "@mui/material";
 
-const PizzaForm = ({ currentPizza, updatePizza, createPizza, toppings }) => {
+const PizzaForm = ({
+	open,
+	setOpen,
+	currentPizza,
+	updatePizza,
+	createPizza,
+	toppings,
+}) => {
 	const [pizzaName, setPizzaName] = useState(currentPizza?.name || "");
 	const [selectedToppings, setSelectedToppings] = useState(
 		currentPizza?.toppings || []
@@ -41,63 +49,91 @@ const PizzaForm = ({ currentPizza, updatePizza, createPizza, toppings }) => {
 	};
 
 	return (
-		<Box>
-			<Typography variant="h6">
-				{" "}
-				{currentPizza ? "Edit Pizza" : "Add Pizza"}
-			</Typography>
-			<form onSubmit={handleSubmit}>
-				<TextField
-					label="Pizza Name"
-					variant="outlined"
-					value={pizzaName}
-					onChange={handleChange}
-					fullWidth
-					required
-					sx={{ my: 2 }}
-				/>
-				<Typography
-					variant="body2"
-					fontWeight={"bold"}
-					sx={{ my: 2 }}
-				>
-					Toppings
-				</Typography>
-
-				<Grid2
-					container
-					spacing={2}
-				>
-					{toppings.map((topping) => (
-						<Grid2
-							key={topping._id}
-							size={6}
+		<Modal
+			open={open}
+			onClose={() => setOpen(false)}
+			data-testid="add-pizza-modal"
+		>
+			<Box
+				sx={{
+					position: "absolute",
+					top: "50%",
+					left: "50%",
+					transform: "translate(-50%, -50%)",
+					width: 400,
+					bgcolor: "background.paper",
+					boxShadow: 24,
+					p: 4,
+				}}
+			>
+				<Box>
+					<Typography variant="h6">
+						{" "}
+						{currentPizza ? "Edit Pizza" : "Add Pizza"}
+					</Typography>
+					<form onSubmit={handleSubmit}>
+						<TextField
+							label="Pizza Name"
+							variant="outlined"
+							value={pizzaName}
+							onChange={handleChange}
+							fullWidth
+							required
+							sx={{ my: 2 }}
+						/>
+						<Typography
+							variant="body2"
+							fontWeight={"bold"}
+							sx={{ my: 2 }}
 						>
-							<Box sx={{ display: "flex", alignItems: "center" }}>
-								<Checkbox
-									checked={selectedToppings.includes(topping._id)}
-									onChange={() => handleSelectTopping(topping)}
-								/>
-								<Typography>{topping.name}</Typography>
-							</Box>
+							Toppings
+						</Typography>
+
+						<Grid2
+							container
+							spacing={2}
+						>
+							{toppings.map((topping) => (
+								<Grid2
+									key={topping._id}
+									size={6}
+								>
+									<Box sx={{ display: "flex", alignItems: "center" }}>
+										<Checkbox
+											checked={selectedToppings.includes(topping._id)}
+											onChange={() => handleSelectTopping(topping)}
+										/>
+										<Typography>{topping.name}</Typography>
+									</Box>
+								</Grid2>
+							))}
 						</Grid2>
-					))}
-				</Grid2>
-				<Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
-					<Button
-						type="submit"
-						variant="contained"
-						color="primary"
-					>
-						{currentPizza ? "Update" : "Create"}
-					</Button>
+						<Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
+							<Button
+								type="submit"
+								variant="contained"
+								color="primary"
+							>
+								{currentPizza ? "Update" : "Create"}
+							</Button>
+							<Button
+								variant="outlined"
+								onClick={() => setOpen(false)}
+								sx={{ ml: 2 }}
+							>
+								Cancel
+							</Button>
+						</Box>
+					</form>
 				</Box>
-			</form>
-		</Box>
+			</Box>
+		</Modal>
 	);
 };
 
 PizzaForm.propTypes = {
+	open: PropTypes.bool.isRequired,
+	setOpen: PropTypes.func.isRequired,
 	currentPizza: PropTypes.shape({
 		id: PropTypes.string,
 		name: PropTypes.string,

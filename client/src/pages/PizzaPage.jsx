@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, Typography, Button, Modal } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import usePizzaApi from "../services/usePizzaApi";
 import useToppingApi from "../services/useToppingApi";
 import AddIcon from "@mui/icons-material/Add";
@@ -79,31 +79,14 @@ const PizzaPage = () => {
 					deletePizza={deletePizza}
 				/>
 			)}
-
-			<Modal
+			<PizzaForm
 				open={open}
-				onClose={() => setOpen(false)}
-			>
-				<Box
-					sx={{
-						position: "absolute",
-						top: "50%",
-						left: "50%",
-						transform: "translate(-50%, -50%)",
-						width: 400,
-						bgcolor: "background.paper",
-						boxShadow: 24,
-						p: 4,
-					}}
-				>
-					<PizzaForm
-						currentPizza={selectedPizza}
-						updatePizza={handleUpdatePizza}
-						createPizza={handleCreatePizza}
-						toppings={toppings}
-					/>
-				</Box>
-			</Modal>
+				setOpen={setOpen}
+				currentPizza={selectedPizza}
+				updatePizza={handleUpdatePizza}
+				createPizza={handleCreatePizza}
+				toppings={toppings}
+			/>
 		</Box>
 	);
 };
