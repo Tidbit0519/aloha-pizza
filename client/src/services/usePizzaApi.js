@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { useState } from 'react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const usePizzaApi = () => {
+    console.log("API_URL", API_URL);
     const [pizzas, setPizzas] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
