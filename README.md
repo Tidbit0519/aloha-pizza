@@ -39,7 +39,7 @@ Before you begin, make sure you have the following installed on your system:
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/yourusername/aloha-pizza.git
+   git clone https://github.com/Tidbit0519/aloha-pizza.git
    cd aloha-pizza
    ```
 
