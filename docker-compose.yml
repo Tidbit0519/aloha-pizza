@@ -1,0 +1,50 @@
+name: aloha-pizza
+
+services:
+  mongo:
+    image: mongo:7.0.12
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - aloha-pizza
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: ./server/.env
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    networks:
+      - aloha-pizza
+    ports:
+      - 5000:5000
+    depends_on:
+      - mongo
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: ./client/.env
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    networks:
+      - aloha-pizza
+    ports:
+      - 5173:5173
+    command: npm run dev -- --host
+    depends_on:
+      - server
+
+volumes:
+  mongo_data:
+networks:
+  aloha-pizza:
+    driver: bridge
