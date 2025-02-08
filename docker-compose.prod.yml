@@ -1,4 +1,4 @@
-name: aloha-pizza
+name: aloha-pizza-prod
 
 services:
   mongo:
@@ -13,7 +13,7 @@ services:
   server:
     build:
       context: ./server
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     restart: unless-stopped
     env_file: ./server/.env
     volumes:
@@ -29,7 +29,7 @@ services:
   client:
     build:
       context: ./client
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     restart: unless-stopped
     env_file: ./client/.env
     volumes:
@@ -38,8 +38,7 @@ services:
     networks:
       - aloha-pizza
     ports:
-      - 5173:5173
-    command: npm run dev -- --host
+      - 80:80
     depends_on:
       - server
 
