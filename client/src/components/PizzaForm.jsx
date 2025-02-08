@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
 	Box,
@@ -23,6 +23,13 @@ const PizzaForm = ({
 		currentPizza?.toppings || []
 	);
 
+	useEffect(() => {
+		if (currentPizza) {
+			setPizzaName(currentPizza.name);
+			setSelectedToppings(currentPizza.toppings);
+		}
+	}, [currentPizza]);
+
 	const handleSelectTopping = (topping) => {
 		if (selectedToppings.includes(topping._id)) {
 			setSelectedToppings(selectedToppings.filter((id) => id !== topping._id));
@@ -46,6 +53,8 @@ const PizzaForm = ({
 		} else {
 			createPizza({ name: pizzaName, toppings: selectedToppings });
 		}
+		setPizzaName("");
+		setSelectedToppings([]);
 	};
 
 	return (
@@ -118,7 +127,11 @@ const PizzaForm = ({
 							</Button>
 							<Button
 								variant="outlined"
-								onClick={() => setOpen(false)}
+								onClick={() => {
+									setOpen(false);
+									setPizzaName("");
+									setSelectedToppings([]);
+								}}
 								sx={{ ml: 2 }}
 							>
 								Cancel
