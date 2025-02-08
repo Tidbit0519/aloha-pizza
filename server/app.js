@@ -5,7 +5,13 @@ import { swaggerDocs } from "./config/index.js";
 import { toppingRouter, pizzaRouter } from "./routes/index.js";
 
 const app = express();
-app.use(cors());
+corsConfig = {
+    origin: "*",
+    credential: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+};
+
+app.use(cors(corsConfig));
 app.use(express.json());
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
