@@ -32,6 +32,7 @@ Before you begin, make sure you have the following installed on your system:
 
 - [Docker](https://docs.docker.com/get-docker/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
+- Node v20+
 - A code editor (e.g., VS Code)
 
 ### Environment Setup
@@ -78,6 +79,7 @@ By default, the React app will run on [http://localhost:5173](http://localhost:5
 1. Navigate to the `server` directory:
    ```bash
    cd server
+   npm i
    ```
 2. Run tests using:
    ```bash
@@ -90,6 +92,7 @@ By default, the React app will run on [http://localhost:5173](http://localhost:5
 1. Navigate to the `client` directory:
    ```bash
    cd client
+   npm i
    ```
 2. Run tests using:
    ```bash
