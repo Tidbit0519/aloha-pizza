@@ -48,11 +48,11 @@ Before you begin, make sure you have the following installed on your system:
    - Create a `.env` file at the root of the project. This file should include all necessary environment variables for both the backend and frontend. For example:
 
      ```env
-     # For Backend (server/.env)
+     # For Backend
      MONGODB_URI=mongodb://mongo:27017/aloha-pizza
      PORT=5000
 
-     # For Frontend (client/.env)
+     # For Frontend
      VITE_API_URL=http://localhost:5000
      ```
 
