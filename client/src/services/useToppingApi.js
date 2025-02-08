@@ -4,7 +4,6 @@ import { useState } from 'react';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const useToppingApi = () => {
-    console.log("API_URL", API_URL);
     const [toppings, setToppings] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
