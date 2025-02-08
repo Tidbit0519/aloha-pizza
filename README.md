@@ -54,7 +54,7 @@ Before you begin, make sure you have the following installed on your system:
      PORT=5000
 
      # For Frontend
-     VITE_API_URL=http://localhost:5000
+     VITE_API_URL=http://localhost:5000/api
      ```
 
 ## Running The Application
