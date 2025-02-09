@@ -73,6 +73,10 @@ const PizzaForm = ({
 					bgcolor: "background.paper",
 					boxShadow: 24,
 					p: 4,
+					borderRadius: 2,
+					maxWidth: {
+						xs: "80%",
+					},
 				}}
 			>
 				<Box>

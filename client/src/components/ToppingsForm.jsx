@@ -31,6 +31,9 @@ const ToppingsForm = ({ open, setOpen, createTopping }) => {
 					boxShadow: 24,
 					p: 4,
 					borderRadius: 2,
+					maxWidth: {
+						xs: "80%",
+					},
 				}}
 			>
 				<Box>
