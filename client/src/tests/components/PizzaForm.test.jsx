@@ -24,7 +24,7 @@ describe("PizzaForm", () => {
 			expect(checkbox).not.toBeChecked();
 		});
 
-		expect(screen.getByRole("button", { name: "Create" })).toBeInTheDocument();
+		expect(screen.getByRole("button", { name: "Add" })).toBeInTheDocument();
 	});
 
 	it("renders a form with the current pizza's name and checked boxes if there is a current pizza", () => {

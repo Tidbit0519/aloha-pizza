@@ -127,7 +127,7 @@ const PizzaForm = ({
 								variant="contained"
 								color="primary"
 							>
-								{currentPizza ? "Update" : "Create"}
+								{currentPizza ? "Update" : "Add"}
 							</Button>
 							<Button
 								variant="outlined"
