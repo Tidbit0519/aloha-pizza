@@ -9,12 +9,46 @@ import {
 	IconButton,
 	Typography,
 	Modal,
+	Collapse,
 } from "@mui/material";
-import { Edit, Delete } from "@mui/icons-material";
+import { Edit, Delete, ExpandMore } from "@mui/icons-material";
+import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
+
+const ExpandMoreTransition = styled((props) => {
+	const { expand, ...other } = props;
+	// return children component
+	return (
+		<ExpandMore
+			{...other}
+			sx={{
+				color: "gray",
+			}}
+		/>
+	);
+})(({ theme }) => ({
+	transition: theme.transitions.create("transform", {
+		duration: theme.transitions.duration.shortest,
+	}),
+	variants: [
+		{
+			props: ({ expand }) => !expand,
+			style: {
+				transform: "rotate(0deg)",
+			},
+		},
+		{
+			props: ({ expand }) => !!expand,
+			style: {
+				transform: "rotate(180deg)",
+			},
+		},
+	],
+}));
 
 const PizzaCard = ({ id, name, toppings, handlePizzaForm, deletePizza }) => {
 	const [open, setOpen] = useState(false);
+	const [expanded, setExpanded] = useState(false);
 
 	const handleDelete = () => {
 		deletePizza(id);
@@ -25,14 +59,6 @@ const PizzaCard = ({ id, name, toppings, handlePizzaForm, deletePizza }) => {
 			<Card>
 				<CardContent>
 					<Typography>{name}</Typography>
-					<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 2 }}>
-						{toppings.map((topping) => (
-							<Chip
-								key={`${id}-${topping._id}`}
-								label={topping.name}
-							/>
-						))}
-					</Box>
 				</CardContent>
 				<CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
 					<Box>
@@ -54,6 +80,55 @@ const PizzaCard = ({ id, name, toppings, handlePizzaForm, deletePizza }) => {
 						</IconButton>
 					</Box>
 				</CardActions>
+				<CardActions
+					sx={{
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+						pl: 2,
+						color: "gray",
+						"&:hover": {
+							cursor: "pointer",
+						},
+					}}
+					onClick={() => setExpanded(!expanded)}
+				>
+					<Typography variant="caption">View Toppings</Typography>
+					<ExpandMoreTransition expand={expanded} />
+				</CardActions>
+				<Collapse
+					in={expanded}
+					timeout="auto"
+					unmountOnExit
+				>
+					<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", p: 1 }}>
+						{toppings.length === 0 && (
+							<Typography
+								variant="caption"
+								sx={{
+									color: "text.secondary",
+									width: "100%",
+									textAlign: "center",
+								}}
+							>
+								No toppings available
+							</Typography>
+						)}
+						{toppings.map((topping, index) =>
+							index < 3 ? (
+								<Chip
+									key={`${id}-${topping._id}`}
+									label={topping.name}
+								/>
+							) : index === 3 ? (
+								<Chip
+									key={`${id}-${topping._id}`}
+									label={`+${toppings.length - 3} more`}
+								/>
+							) : null
+						)}
+					</Box>
+				</Collapse>
 			</Card>
 
 			<Modal
