@@ -1,5 +1,6 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, Toolbar } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
 
 const pages = ["Pizza", "Toppings"];
 
@@ -10,15 +11,15 @@ const Layout = () => {
 		<Box>
 			<AppBar position="static">
 				<Toolbar>
-					<Typography
-						variant="h5"
-						sx={{
-							cursor: "pointer",
-						}}
+					<Button
+						color="inherit"
+						variant="text"
+						startIcon={<HomeIcon />}
 						onClick={() => navigate("/")}
+						sx={{ width: 100 }}
 					>
-						Aloha Pizza
-					</Typography>
+						Home
+					</Button>
 					<Box sx={{ marginLeft: 8 }} />
 					{pages.map((page) => (
 						// Mark button background darker if it's on the current page

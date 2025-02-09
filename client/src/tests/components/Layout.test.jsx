@@ -17,7 +17,7 @@ describe("Layout", () => {
 			</MemoryRouter>
 		);
 
-		expect(screen.getByText("Home")).toBeInTheDocument();
+		expect(screen.getAllByText("Home")).toHaveLength(2);
 		expect(screen.getByText("Pizza")).toBeInTheDocument();
 		expect(screen.getByText("Toppings")).toBeInTheDocument();
 	});
