@@ -2,7 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import { Box, Button, Typography, TextField, Modal } from "@mui/material";
 
-const ToppingsForm = ({ open, setOpen, createTopping }) => {
+const ToppingsForm = ({ error, open, setOpen, createTopping }) => {
 	const [toppingName, setToppingName] = useState("");
 
 	const handleChange = (event) => {
@@ -12,6 +12,8 @@ const ToppingsForm = ({ open, setOpen, createTopping }) => {
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		createTopping({ name: toppingName });
+		setToppingName("");
+		error === null ? setOpen(false) : null;
 	};
 
 	return (
@@ -73,6 +75,7 @@ const ToppingsForm = ({ open, setOpen, createTopping }) => {
 };
 
 ToppingsForm.propTypes = {
+	error: PropTypes.string,
 	open: PropTypes.bool.isRequired,
 	setOpen: PropTypes.func.isRequired,
 	createTopping: PropTypes.func.isRequired,

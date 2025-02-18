@@ -10,6 +10,7 @@ const ToppingsPage = () => {
 	const {
 		toppings,
 		loading,
+		error,
 		getAllToppings,
 		createTopping,
 		updateTopping,
@@ -20,13 +21,8 @@ const ToppingsPage = () => {
 		getAllToppings();
 	}, []);
 
-	const handleCreateTopping = async (topping) => {
-		try {
-			await createTopping(topping);
-			setOpen(false);
-		} catch (error) {
-			alert(error);
-		}
+	const handleCreateTopping = (topping) => {
+		createTopping(topping);
 	};
 
 	return (
@@ -57,6 +53,7 @@ const ToppingsPage = () => {
 				/>
 			)}
 			<ToppingsForm
+				error={error}
 				open={open}
 				setOpen={setOpen}
 				createTopping={handleCreateTopping}

@@ -11,6 +11,7 @@ const PizzaPage = () => {
 	const {
 		pizzas,
 		loading,
+		error,
 		getAllPizzas,
 		createPizza,
 		updatePizza,
@@ -25,12 +26,7 @@ const PizzaPage = () => {
 	}, []);
 
 	const handleCreatePizza = async (pizza) => {
-		try {
-			await createPizza(pizza);
-			setOpen(false);
-		} catch (error) {
-			alert(error);
-		}
+		await createPizza(pizza);
 	};
 
 	const handleCreatePizzaForm = () => {
@@ -39,12 +35,7 @@ const PizzaPage = () => {
 	};
 
 	const handleUpdatePizza = async (pizza) => {
-		try {
-			await updatePizza(pizza);
-			setOpen(false);
-		} catch (error) {
-			alert(error);
-		}
+		await updatePizza(pizza);
 	};
 
 	const handleUpdatePizzaForm = (pizza) => {
@@ -80,6 +71,7 @@ const PizzaPage = () => {
 				/>
 			)}
 			<PizzaForm
+				error={error}
 				open={open}
 				setOpen={setOpen}
 				currentPizza={selectedPizza}

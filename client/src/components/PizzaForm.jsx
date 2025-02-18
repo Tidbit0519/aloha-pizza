@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 
 const PizzaForm = ({
+	error,
 	open,
 	setOpen,
 	currentPizza,
@@ -52,9 +53,10 @@ const PizzaForm = ({
 			});
 		} else {
 			createPizza({ name: pizzaName, toppings: selectedToppings });
+			setPizzaName("");
+			setSelectedToppings([]);
 		}
-		setPizzaName("");
-		setSelectedToppings([]);
+		error === null ? setOpen(false) : null;
 	};
 
 	return (
@@ -149,6 +151,7 @@ const PizzaForm = ({
 };
 
 PizzaForm.propTypes = {
+	error: PropTypes.string,
 	open: PropTypes.bool.isRequired,
 	setOpen: PropTypes.func.isRequired,
 	currentPizza: PropTypes.shape({
