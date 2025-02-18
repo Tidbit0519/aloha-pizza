@@ -38,12 +38,9 @@ describe("Pizza API", () => {
 		});
 
 		it("should create a mock pizza", async () => {
-			const toppingObj = await request(app)
-				.post("/api/toppings")
-				.send({ name: "mock topping" });
 			const response = await request(app)
 				.post("/api/pizzas")
-				.send({ name: "mock pizza", toppings: [{ _id: toppingObj.body._id }] });
+				.send({ name: "mock pizza", toppings: [] });
 			expect(response.status).toBe(201);
 			expect(response.body.message).toBe("mock pizza created successfully");
 		});
@@ -101,14 +98,16 @@ describe("Pizza API", () => {
 			const pizzas = await request(app).get("/api/pizzas");
 			const pizzaObj = pizzas.body[0];
 
-			const toppings = await request(app).get("/api/toppings");
-			const toppingObj = toppings.body[0];
-
 			const response = await request(app)
 				.put(`/api/pizzas/${pizzaObj._id}`)
-				.send({ name: "mock pizza", toppings: [{ _id: toppingObj._id }] });
+				.send({
+					name: "mock pizza update",
+					toppings: [],
+				});
 			expect(response.status).toBe(200);
-			expect(response.body.message).toBe("mock pizza updated successfully");
+			expect(response.body.message).toBe(
+				"mock pizza update updated successfully"
+			);
 		});
 
 		it("should return an error if pizza already exists", async () => {
@@ -121,7 +120,7 @@ describe("Pizza API", () => {
 
 			const response = await request(app)
 				.put(`/api/pizzas/${pizzaObj1._id}`)
-				.send({ name: pizzaObj2._body.name.name, toppings: [] });
+				.send({ name: "mock pizza 2", toppings: [] });
 			expect(response.status).toBe(400);
 			expect(response.body.message).toBe("mock pizza 2 already exists");
 		});

@@ -34,7 +34,7 @@ describe("Topping API", () => {
 				.post("/api/toppings")
 				.send({ name: "mock topping" });
 			expect(response.status).toBe(201);
-			expect(response.body.name).toBe("mock topping");
+			expect(response.body.topping.name).toBe("mock topping");
 		});
 
 		it("should return an error if topping already exists", async () => {
@@ -72,13 +72,12 @@ describe("Topping API", () => {
 
 		it("should update the topping if found", async () => {
 			const toppingList = await request(app).get("/api/toppings");
-			const toppingObj = toppingList.body[0];
 
 			const response = await request(app)
 				.put(`/api/toppings/${toppingList.body[0]._id}`)
 				.send({ name: "mock topping" });
 			expect(response.status).toBe(200);
-			expect(response.body.name).toBe("mock topping");
+			expect(response.body.topping.name).toBe("mock topping");
 		});
 
 		it("should return an error if topping already exists", async () => {
