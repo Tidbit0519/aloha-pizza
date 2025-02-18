@@ -45,9 +45,7 @@ const createPizza = async (req, res, next) => {
 
 		const newPizza = await Pizza.create({ name: name, toppings });
 		res.status(201).json({
-			_id: newPizza._id,
-			name: newPizza,
-			toppings: newPizza.toppings,
+			pizza: newPizza,
 			message: `${name} created successfully`,
 		});
 	} catch (error) {
@@ -100,9 +98,7 @@ const updatePizza = async (req, res, next) => {
 		pizza.toppings = toppings;
 		await pizza.save();
 		res.status(200).json({
-			_id: pizza._id,
-			name: pizza.name,
-			toppings: pizza.toppings,
+			pizza: pizza,
 			message: `${name} updated successfully`,
 		});
 	} catch (error) {

@@ -30,8 +30,7 @@ const createTopping = async (req, res, next) => {
 		const newTopping = new Topping({ name: name });
 		await newTopping.save();
 		res.status(201).json({
-			_id: newTopping._id,
-			name: newTopping.name,
+			topping: newTopping,
 			message: `${name} created successfully`,
 		});
 	} catch (error) {
@@ -68,8 +67,7 @@ const updateTopping = async (req, res, next) => {
 		topping.name = name;
 		await topping.save();
 		res.status(200).json({
-			_id: topping._id,
-			name: topping.name,
+			topping: topping,
 			message: `${name} updated successfully`,
 		});
 	} catch (error) {
