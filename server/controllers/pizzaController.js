@@ -44,7 +44,12 @@ const createPizza = async (req, res, next) => {
 		}
 
 		const newPizza = await Pizza.create({ name: name, toppings });
-		res.status(201).json(newPizza);
+		res.status(201).json({
+			_id: newPizza._id,
+			name: newPizza,
+			toppings: newPizza.toppings,
+			message: `${name} created successfully`,
+		});
 	} catch (error) {
 		return next(error);
 	}
@@ -94,7 +99,12 @@ const updatePizza = async (req, res, next) => {
 		pizza.name = name;
 		pizza.toppings = toppings;
 		await pizza.save();
-		res.status(200).json(pizza);
+		res.status(200).json({
+			_id: pizza._id,
+			name: pizza.name,
+			toppings: pizza.toppings,
+			message: `${name} updated successfully`,
+		});
 	} catch (error) {
 		return next(error);
 	}
@@ -109,7 +119,7 @@ const deletePizza = async (req, res, next) => {
 			err.status = 404;
 			return next(err);
 		}
-		res.status(200).json({ message: "Pizza deleted successfully" });
+		res.status(200).json({ message: `${pizza.name} deleted successfully` });
 	} catch (error) {
 		return next(error);
 	}
