@@ -40,10 +40,7 @@ const useToppingApi = () => {
 				name,
 			});
 			setLoading(true);
-			// setToppings([...toppings, response.data.topping]);
-			await axiosInstance.get(
-				`${API_URL}/toppings${search ? `?name=${search}` : ""}`
-			);
+			getAllToppings();
 		} catch (error) {
 			setError(error.response.data.message);
 		} finally {
