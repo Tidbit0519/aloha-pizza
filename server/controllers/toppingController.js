@@ -19,14 +19,6 @@ const createTopping = async (req, res, next) => {
 			return next(err);
 		}
 
-		const toppingExists = await Topping.findOne({
-			name: { $regex: new RegExp(`^${name}$`, "i") },
-		});
-		if (toppingExists) {
-			const err = new Error(`${name} already exists`);
-			err.status = 400;
-			return next(err);
-		}
 		const newTopping = new Topping({ name: name });
 		await newTopping.save();
 		res.status(201).json({
@@ -52,15 +44,6 @@ const updateTopping = async (req, res, next) => {
 		if (!topping) {
 			const err = new Error("Topping not found");
 			err.status = 404;
-			return next(err);
-		}
-
-		const toppingExists = await Topping.findOne({
-			name: { $regex: new RegExp(`^${name}$`, "i") },
-		});
-		if (toppingExists && toppingExists._id.toString() !== id) {
-			const err = new Error(`${name} already exists`);
-			err.status = 400;
 			return next(err);
 		}
 
