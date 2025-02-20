@@ -1,12 +1,12 @@
 import request from "supertest";
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import app from "../app.js";
 
 const mockToppings = [
 	{ name: "pepperoni" },
-	{ name: "sausage" },
 	{ name: "mushrooms" },
+	{ name: "onions" },
 ];
 
 describe("Topping API", () => {
@@ -15,9 +15,12 @@ describe("Topping API", () => {
 		await mongoose.connect(mongoServer.getUri());
 	});
 
-	afterAll((done) => {
-		mongoose.connection.close();
-		done();
+	afterEach(async () => {
+		await mongoose.connection.db.dropDatabase();
+	});
+
+	afterAll(async () => {
+		await mongoose.connection.close();
 	});
 
 	describe("GET /api/toppings", () => {
@@ -57,17 +60,23 @@ describe("Topping API", () => {
 		it("should create a mock topping", async () => {
 			const response = await request(app)
 				.post("/api/toppings")
-				.send({ name: "mock topping" });
+				.send({ name: mockToppings[0].name });
 			expect(response.status).toBe(201);
-			expect(response.body.topping.name).toBe("mock topping");
+			expect(response.body.topping.name).toBe(mockToppings[0].name);
 		});
 
 		it("should return an error if topping already exists", async () => {
+			await request(app)
+				.post("/api/toppings")
+				.send({ name: mockToppings[0].name });
+
 			const response = await request(app)
 				.post("/api/toppings")
-				.send({ name: "mock topping" });
+				.send({ name: mockToppings[0].name });
 			expect(response.status).toBe(400);
-			expect(response.body.message).toBe("mock topping already exists");
+			expect(response.body.message).toBe(
+				`${mockToppings[0].name} already exists`
+			);
 		});
 	});
 
@@ -82,7 +91,7 @@ describe("Topping API", () => {
 		it("should return an error if id is invalid", async () => {
 			const response = await request(app)
 				.put("/api/toppings/123")
-				.send({ name: "pepperoni" });
+				.send({ name: mockToppings[0].name });
 			expect(response.status).toBe(500);
 		});
 
@@ -90,34 +99,38 @@ describe("Topping API", () => {
 			const objId = new mongoose.Types.ObjectId();
 			const response = await request(app)
 				.put(`/api/toppings/${objId}`)
-				.send({ name: "pepperoni" });
+				.send({ name: mockToppings[0].name });
 			expect(response.status).toBe(404);
 			expect(response.body.message).toBe("Topping not found");
 		});
 
 		it("should update the topping if found", async () => {
-			const toppingList = await request(app).get("/api/toppings");
+			const newToppingObj = await request(app)
+				.post("/api/toppings")
+				.send({ name: mockToppings[0].name });
 
 			const response = await request(app)
-				.put(`/api/toppings/${toppingList.body[0]._id}`)
-				.send({ name: "mock topping" });
+				.put(`/api/toppings/${newToppingObj.body.topping._id}`)
+				.send({ name: mockToppings[1].name });
 			expect(response.status).toBe(200);
-			expect(response.body.topping.name).toBe("mock topping");
+			expect(response.body.topping.name).toBe(mockToppings[1].name);
 		});
 
 		it("should return an error if topping already exists", async () => {
-			// Two existing toppings
-			const toppingList = await request(app).get("/api/toppings");
-			const toppingObj1 = toppingList.body[0];
-			const toppingObj2 = await request(app)
+			const newToppingObj1 = await request(app)
 				.post("/api/toppings")
-				.send({ name: "mock topping 2" });
+				.send({ name: mockToppings[0].name });
+			await request(app)
+				.post("/api/toppings")
+				.send({ name: mockToppings[1].name });
 
 			const response = await request(app)
-				.put(`/api/toppings/${toppingObj1._id}`)
-				.send({ name: "mock topping 2" });
+				.put(`/api/toppings/${newToppingObj1.body.topping._id}`)
+				.send({ name: mockToppings[1].name });
 			expect(response.status).toBe(400);
-			expect(response.body.message).toBe("mock topping 2 already exists");
+			expect(response.body.message).toBe(
+				mockToppings[1].name + " already exists"
+			);
 		});
 	});
 
@@ -135,13 +148,17 @@ describe("Topping API", () => {
 		});
 
 		it("should delete the topping if found", async () => {
-			const toppings = await request(app).get("/api/toppings");
-			const toppingObj = toppings.body[0];
+			const newToppingObj = await request(app)
+				.post("/api/toppings")
+				.send({ name: mockToppings[0].name });
+
 			const response = await request(app).delete(
-				`/api/toppings/${toppingObj._id}`
+				`/api/toppings/${newToppingObj.body.topping._id}`
 			);
 			expect(response.status).toBe(200);
-			expect(response.body.message).toBe("mock topping deleted successfully");
+			expect(response.body.message).toBe(
+				mockToppings[0].name + " deleted successfully"
+			);
 		});
 	});
 });
