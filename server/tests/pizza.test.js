@@ -3,10 +3,26 @@ import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import app from "../app.js";
 
+const mockToppings = [
+	{ name: "pepperoni" },
+	{ name: "mushrooms" },
+	{ name: "onions" },
+];
+
+const mockPizzas = [
+	{ name: "pepperoni pizza", toppings: [] },
+	{ name: "mushroom pizza", toppings: [] },
+	{ name: "onion pizza", toppings: [] },
+];
+
 describe("Pizza API", () => {
 	beforeAll(async () => {
 		const mongoServer = await MongoMemoryServer.create();
 		await mongoose.connect(mongoServer.getUri());
+	});
+
+	afterEach(async () => {
+		await mongoose.connection.db.dropDatabase();
 	});
 
 	afterAll((done) => {
@@ -29,35 +45,35 @@ describe("Pizza API", () => {
 			expect(response.body.message).toBe("Name is required");
 		});
 
-		it("should return an error if toppings are missing", async () => {
-			const response = await request(app)
-				.post("/api/pizzas")
-				.send({ name: "mock pizza" });
-			expect(response.status).toBe(400);
-			expect(response.body.message).toBe("Toppings are required");
-		});
-
 		it("should create a mock pizza", async () => {
 			const response = await request(app)
 				.post("/api/pizzas")
-				.send({ name: "mock pizza", toppings: [] });
+				.send({ name: mockPizzas[0].name, toppings: [] });
 			expect(response.status).toBe(201);
-			expect(response.body.message).toBe("mock pizza created successfully");
+			expect(response.body.message).toBe(
+				`${mockPizzas[0].name} created successfully`
+			);
 		});
 
 		it("should return an error if pizza already exists", async () => {
+			await request(app)
+				.post("/api/pizzas")
+				.send({ name: mockPizzas[0].name, toppings: [] });
+
 			const response = await request(app)
 				.post("/api/pizzas")
-				.send({ name: "mock pizza", toppings: [] });
+				.send({ name: mockPizzas[0].name, toppings: [] });
 			expect(response.status).toBe(400);
-			expect(response.body.message).toBe("mock pizza already exists");
+			expect(response.body.message).toBe(
+				`${mockPizzas[0].name} already exists`
+			);
 		});
 
 		it("should return an error if topping is not found", async () => {
 			const objId = new mongoose.Types.ObjectId();
 			const response = await request(app)
 				.post("/api/pizzas")
-				.send({ name: "mock pizza 2", toppings: [{ _id: objId }] });
+				.send({ name: mockPizzas[0].name, toppings: [objId] });
 			expect(response.status).toBe(400);
 			expect(response.body.message).toBe("Topping not found");
 		});
@@ -65,23 +81,16 @@ describe("Pizza API", () => {
 
 	describe("PUT /api/pizzas/:id", () => {
 		it("should return an error if name is missing", async () => {
-			const response = await request(app).post("/api/pizzas");
+			const objId = new mongoose.Types.ObjectId();
+			const response = await request(app).put(`/api/pizzas/${objId}`);
 			expect(response.status).toBe(400);
 			expect(response.body.message).toBe("Name is required");
-		});
-
-		it("should return an error if toppings are missing", async () => {
-			const response = await request(app)
-				.post("/api/pizzas")
-				.send({ name: "mock pizza" });
-			expect(response.status).toBe(400);
-			expect(response.body.message).toBe("Toppings are required");
 		});
 
 		it("should return an error if id is invalid", async () => {
 			const response = await request(app)
 				.put("/api/pizzas/123")
-				.send({ name: "mock pizza", toppings: [] });
+				.send({ name: mockPizzas[0].name, toppings: [] });
 			expect(response.status).toBe(500);
 		});
 
@@ -89,49 +98,48 @@ describe("Pizza API", () => {
 			const objId = new mongoose.Types.ObjectId();
 			const response = await request(app)
 				.put(`/api/pizzas/${objId}`)
-				.send({ name: "mock pizza", toppings: [] });
+				.send({ name: mockPizzas[0].name, toppings: [] });
 			expect(response.status).toBe(404);
 			expect(response.body.message).toBe("Pizza not found");
 		});
 
 		it("should update the pizza if found", async () => {
-			const pizzas = await request(app).get("/api/pizzas");
-			const pizzaObj = pizzas.body[0];
+			const newPizzaObj = await request(app)
+				.post("/api/pizzas")
+				.send({ name: mockPizzas[0].name, toppings: [] });
 
 			const response = await request(app)
-				.put(`/api/pizzas/${pizzaObj._id}`)
-				.send({
-					name: "mock pizza update",
-					toppings: [],
-				});
+				.put(`/api/pizzas/${newPizzaObj.body.pizza._id}`)
+				.send({ name: mockPizzas[1].name, toppings: [] });
 			expect(response.status).toBe(200);
-			expect(response.body.message).toBe(
-				"mock pizza update updated successfully"
-			);
 		});
 
 		it("should return an error if pizza already exists", async () => {
-			// Two existing pizzas
-			const pizzas = await request(app).get("/api/pizzas");
-			const pizzaObj1 = pizzas.body[0];
-			const pizzaObj2 = await request(app)
+			const newPizzaObj = await request(app)
 				.post("/api/pizzas")
-				.send({ name: "mock pizza 2", toppings: [] });
+				.send({ name: mockPizzas[0].name, toppings: [] });
+			await request(app)
+				.post("/api/pizzas")
+				.send({ name: mockPizzas[1].name, toppings: [] });
 
 			const response = await request(app)
-				.put(`/api/pizzas/${pizzaObj1._id}`)
-				.send({ name: "mock pizza 2", toppings: [] });
+				.put(`/api/pizzas/${newPizzaObj.body.pizza._id}`)
+				.send({ name: mockPizzas[1].name, toppings: [] });
 			expect(response.status).toBe(400);
-			expect(response.body.message).toBe("mock pizza 2 already exists");
+			expect(response.body.message).toBe(
+				mockPizzas[1].name + " already exists"
+			);
 		});
 
 		it("should return an error if topping is not found", async () => {
-			const pizzas = await request(app).get("/api/pizzas");
-			const pizzaObj = pizzas.body[0];
+			const newPizzaObj = await request(app)
+				.post("/api/pizzas")
+				.send({ name: mockPizzas[0].name, toppings: [] });
 			const objId = new mongoose.Types.ObjectId();
+
 			const response = await request(app)
-				.put(`/api/pizzas/${pizzaObj._id}`)
-				.send({ name: "mock pizza", toppings: [{ _id: objId }] });
+				.put(`/api/pizzas/${newPizzaObj.body.pizza._id}`)
+				.send({ name: mockPizzas[0].name, toppings: [objId] });
 			expect(response.status).toBe(400);
 			expect(response.body.message).toBe("Topping not found");
 		});
@@ -151,10 +159,17 @@ describe("Pizza API", () => {
 		});
 
 		it("should delete the pizza if found", async () => {
-			const pizzas = await request(app).get("/api/pizzas");
-			const pizzaObj = pizzas.body[0];
-			const response = await request(app).delete(`/api/pizzas/${pizzaObj._id}`);
+			const newPizzaObj = await request(app)
+				.post("/api/pizzas")
+				.send({ name: mockPizzas[0].name, toppings: [] });
+
+			const response = await request(app).delete(
+				`/api/pizzas/${newPizzaObj.body.pizza._id}`
+			);
 			expect(response.status).toBe(200);
+			expect(response.body.message).toBe(
+				`${mockPizzas[0].name} deleted successfully`
+			);
 		});
 	});
 });

@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { Pizza, Topping } from "../models/index.js";
 
 const getAllPizzas = async (req, res, next) => {
@@ -19,27 +18,14 @@ const createPizza = async (req, res, next) => {
 			return next(err);
 		}
 
-		if (!toppings) {
-			const err = new Error("Toppings are required");
-			err.status = 400;
-			return next(err);
-		}
-
-		const pizzaExists = await Pizza.findOne({
-			name: { $regex: new RegExp(`^${name}$`, "i") },
-		});
-		if (pizzaExists) {
-			const err = new Error(`${name} already exists`);
-			err.status = 400;
-			return next(err);
-		}
-
-		for (let topping of toppings) {
-			const toppingExists = await Topping.findById(topping);
-			if (!toppingExists) {
-				const err = new Error(`Topping not found`);
-				err.status = 400;
-				return next(err);
+		if (toppings.length !== 0) {
+			for (let topping of toppings) {
+				const toppingExists = await Topping.findById(topping);
+				if (!toppingExists) {
+					const err = new Error(`Topping not found`);
+					err.status = 400;
+					return next(err);
+				}
 			}
 		}
 
@@ -73,15 +59,6 @@ const updatePizza = async (req, res, next) => {
 		if (!pizza) {
 			const err = new Error("Pizza not found");
 			err.status = 404;
-			return next(err);
-		}
-
-		const pizzaExists = await Pizza.findOne({
-			name: { $regex: new RegExp(`^${name}$`, "i") },
-		});
-		if (pizzaExists && pizzaExists._id.toString() !== id) {
-			const err = new Error(`${name} already exists`);
-			err.status = 400;
 			return next(err);
 		}
 
