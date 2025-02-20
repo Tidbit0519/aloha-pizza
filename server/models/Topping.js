@@ -9,6 +9,8 @@ const toppingSchema = new mongoose.Schema({
 	},
 });
 
+toppingSchema.index({ name: "text" });
+
 // validate to check if the topping already exists (case-insensitive) and if it is not the same topping being updated
 toppingSchema.pre("save", async function (next) {
 	try {

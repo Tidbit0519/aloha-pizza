@@ -1,8 +1,14 @@
-import mongoose from "mongoose";
 import { Topping } from "../models/index.js";
 
 const getAllToppings = async (req, res, next) => {
 	try {
+		const { name } = req.query;
+		if (name) {
+			const toppings = await Topping.find({
+				$text: { $search: name, $caseSensitive: false },
+			});
+			return res.status(200).json(toppings);
+		}
 		const toppings = await Topping.find({});
 		res.status(200).json(toppings);
 	} catch (error) {

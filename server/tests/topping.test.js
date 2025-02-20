@@ -3,6 +3,12 @@ import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import app from "../app.js";
 
+const mockToppings = [
+	{ name: "pepperoni" },
+	{ name: "sausage" },
+	{ name: "mushrooms" },
+];
+
 describe("Topping API", () => {
 	beforeAll(async () => {
 		const mongoServer = await MongoMemoryServer.create();
@@ -19,6 +25,25 @@ describe("Topping API", () => {
 			const response = await request(app).get("/api/toppings");
 			expect(response.status).toBe(200);
 			expect(Array.isArray(response.body)).toBeTruthy();
+		});
+
+		it("should return a list of toppings that match the search query", async () => {
+			await request(app)
+				.post("/api/toppings")
+				.send({ name: mockToppings[0].name });
+			await request(app)
+				.post("/api/toppings")
+				.send({ name: mockToppings[1].name });
+			await request(app)
+				.post("/api/toppings")
+				.send({ name: mockToppings[2].name });
+
+			const response = await request(app).get(
+				`/api/toppings?name=${mockToppings[0].name}`
+			);
+			expect(response.status).toBe(200);
+			expect(response.body.length).toBe(1);
+			expect(response.body[0].name).toBe(mockToppings[0].name);
 		});
 	});
 
