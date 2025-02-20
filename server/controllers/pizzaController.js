@@ -2,6 +2,29 @@ import { Pizza, Topping } from "../models/index.js";
 
 const getAllPizzas = async (req, res, next) => {
 	try {
+		const { search } = req.query;
+		if (search) {
+			const pizzas = await Pizza.aggregate([
+				{
+					$lookup: {
+						from: "toppings",
+						localField: "toppings",
+						foreignField: "_id",
+						as: "toppings",
+					},
+				},
+				{
+					$match: {
+						$or: [
+							{ name: { $regex: search, $options: "i" } },
+							{ "toppings.name": { $regex: search, $options: "i" } },
+						],
+					},
+				},
+			]);
+			return res.status(200).json(pizzas);
+		}
+
 		const pizzas = await Pizza.find({}).populate("toppings");
 		res.status(200).json(pizzas);
 	} catch (error) {

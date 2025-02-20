@@ -15,6 +15,8 @@ const pizzaSchema = new mongoose.Schema({
 	],
 });
 
+pizzaSchema.index({ name: "text" });
+
 pizzaSchema.pre("save", async function (next) {
 	try {
 		const pizza = this;

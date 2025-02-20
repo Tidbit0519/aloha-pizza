@@ -12,7 +12,7 @@ const mockToppings = [
 const mockPizzas = [
 	{ name: "pepperoni pizza", toppings: [] },
 	{ name: "mushroom pizza", toppings: [] },
-	{ name: "onion pizza", toppings: [] },
+	{ name: "supreme pizza", toppings: [] },
 ];
 
 describe("Pizza API", () => {
@@ -35,6 +35,46 @@ describe("Pizza API", () => {
 			const response = await request(app).get("/api/pizzas");
 			expect(response.status).toBe(200);
 			expect(Array.isArray(response.body)).toBeTruthy();
+		});
+
+		it("should return a list of pizzas that match the search query", async () => {
+			const pepperoni = await request(app)
+				.post("/api/toppings")
+				.send({ name: mockToppings[0].name });
+			const mushrooms = await request(app)
+				.post("/api/toppings")
+				.send({ name: mockToppings[1].name });
+			const onions = await request(app)
+				.post("/api/toppings")
+				.send({ name: mockToppings[2].name });
+
+			await request(app)
+				.post("/api/pizzas")
+				.send({
+					name: mockPizzas[0].name,
+					toppings: [pepperoni.body.topping._id],
+				});
+			await request(app)
+				.post("/api/pizzas")
+				.send({
+					name: mockPizzas[1].name,
+					toppings: [mushrooms.body.topping._id],
+				});
+			await request(app)
+				.post("/api/pizzas")
+				.send({
+					name: mockPizzas[2].name,
+					toppings: [onions.body.topping._id, mushrooms.body.topping._id],
+				});
+
+			const response = await request(app).get(
+				`/api/pizzas?search=${mockToppings[1].name}`
+			);
+
+			expect(response.status).toBe(200);
+			expect(response.body.length).toBe(2);
+			expect(response.body[0].name).toBe(mockPizzas[1].name);
+			expect(response.body[1].name).toBe(mockPizzas[2].name);
 		});
 	});
 
