@@ -2,6 +2,7 @@ import { Pizza, Topping } from "../models/index.js";
 
 const getAllPizzas = async (req, res, next) => {
 	try {
+		console.log("search", req.query);
 		const { search } = req.query;
 		if (search) {
 			const pizzas = await Pizza.aggregate([
@@ -22,6 +23,7 @@ const getAllPizzas = async (req, res, next) => {
 					},
 				},
 			]);
+			console.log("pizzas", pizzas);
 			return res.status(200).json(pizzas);
 		}
 

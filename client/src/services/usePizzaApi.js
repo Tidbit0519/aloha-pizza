@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axiosInstance from "./axiosInstance";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -7,11 +7,24 @@ const usePizzaApi = () => {
 	const [pizzas, setPizzas] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
+	const [search, setSearch] = useState("");
+
+	const handleSearch = (name) => {
+		name = name.trim().toLowerCase();
+		setSearch(name);
+	};
+
+	useEffect(() => {
+		getAllPizzas();
+	}, [search]);
 
 	const getAllPizzas = async () => {
 		setError(null);
 		try {
-			const response = await axiosInstance.get(`${API_URL}/pizzas`);
+			console.log("search", search);
+			const response = await axiosInstance.get(
+				`${API_URL}/pizzas/${search ? `?search=${search}` : ""}`
+			);
 			setLoading(true);
 			setPizzas(response.data);
 		} catch (error) {
@@ -24,12 +37,12 @@ const usePizzaApi = () => {
 	const createPizza = async ({ name, toppings }) => {
 		setError(null);
 		try {
-			const response = await axiosInstance.post(`${API_URL}/pizzas`, {
+			await axiosInstance.post(`${API_URL}/pizzas`, {
 				name,
 				toppings,
 			});
 			setLoading(true);
-			setPizzas([...pizzas, response.data.pizza]);
+			getAllPizzas();
 		} catch (error) {
 			setError(error.response.data.message);
 		} finally {
@@ -72,6 +85,7 @@ const usePizzaApi = () => {
 		pizzas,
 		loading,
 		error,
+		handleSearch,
 		getAllPizzas,
 		createPizza,
 		updatePizza,

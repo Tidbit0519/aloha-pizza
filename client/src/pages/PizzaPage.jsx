@@ -1,10 +1,19 @@
 import { useState, useEffect } from "react";
-import { Box, Typography, Button } from "@mui/material";
+import {
+	Box,
+	Typography,
+	Button,
+	IconButton,
+	TextField,
+	InputAdornment,
+} from "@mui/material";
 import usePizzaApi from "../services/usePizzaApi";
 import useToppingApi from "../services/useToppingApi";
 import AddIcon from "@mui/icons-material/Add";
 import PizzaList from "../components/PizzaList";
 import PizzaForm from "../components/PizzaForm";
+import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const PizzaPage = () => {
 	const [open, setOpen] = useState(false);
@@ -12,6 +21,7 @@ const PizzaPage = () => {
 		pizzas,
 		loading,
 		error,
+		handleSearch,
 		getAllPizzas,
 		createPizza,
 		updatePizza,
@@ -19,6 +29,7 @@ const PizzaPage = () => {
 	} = usePizzaApi();
 	const { toppings, getAllToppings } = useToppingApi();
 	const [selectedPizza, setSelectedPizza] = useState(null);
+	const [searchInput, setSearchInput] = useState("");
 
 	useEffect(() => {
 		getAllPizzas();
@@ -51,6 +62,44 @@ const PizzaPage = () => {
 			>
 				Pizza
 			</Typography>
+			<Box
+				sx={{
+					mt: 2,
+					display: "flex",
+					alignItems: "center",
+					gap: 2,
+				}}
+			>
+				<TextField
+					label="Search"
+					variant="outlined"
+					value={searchInput}
+					onChange={(e) => setSearchInput(e.target.value)}
+					slotProps={{
+						input: {
+							endAdornment: (
+								<InputAdornment position="end">
+									<IconButton
+										onClick={() => {
+											setSearchInput("");
+											handleSearch("");
+										}}
+									>
+										<ClearIcon />
+									</IconButton>
+								</InputAdornment>
+							),
+						},
+					}}
+					sx={{ flexGrow: 1 }}
+				/>
+				<IconButton
+					color="primary"
+					onClick={() => handleSearch(searchInput)}
+				>
+					<SearchIcon />
+				</IconButton>
+			</Box>
 			<Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
 				<Button
 					variant="contained"
