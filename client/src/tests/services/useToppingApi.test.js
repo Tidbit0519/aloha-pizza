@@ -42,4 +42,18 @@ describe("useToppingApi", () => {
 
 		expect(result.current.toppings).toEqual(mockToppings);
 	});
+
+	it("should return an error when fetching all toppings fails", async () => {
+		const { result } = renderHook(() => useToppingApi());
+		const error = "Error fetching toppings";
+		vi.spyOn(axios, "get").mockRejectedValue({
+			response: { data: { message: error } },
+		});
+
+		await act(() => {
+			result.current.getAllToppings();
+		});
+
+		expect(result.current.error).toEqual(error);
+	});
 });
