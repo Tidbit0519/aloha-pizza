@@ -1,87 +1,102 @@
 import mongoose from "mongoose";
 import { Pizza, Topping } from "../models/index.js";
 
-const getAllPizzas = async (req, res) => {
-    try {
-        const pizzas = await Pizza.find({}).populate('toppings');
-        res.status(200).json(pizzas);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
+const getAllPizzas = async (req, res, next) => {
+	try {
+		const pizzas = await Pizza.find({}).populate("toppings");
+		res.status(200).json(pizzas);
+	} catch (error) {
+		return next(error);
+	}
+};
 
-const createPizza = async (req, res) => {
-    const { name, toppings } = req.body;
-    try {
-        if (!name || !toppings) {
-            return res.status(400).json({ message: 'Name and toppings are required' });
-        }
+const createPizza = async (req, res, next) => {
+	const { name, toppings } = req.body;
+	try {
+		if (!name) {
+			const err = new Error("Name is required");
+			err.status = 400;
+			return next(err);
+		}
 
-        const pizzaExists = await Pizza.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
-        if (pizzaExists) {
-            return res.status(400).json({ message: 'Pizza already exists' });
-        }
+		if (toppings.length !== 0) {
+			for (let topping of toppings) {
+				const toppingExists = await Topping.findById(topping);
+				if (!toppingExists) {
+					const err = new Error(`Topping not found`);
+					err.status = 400;
+					return next(err);
+				}
+			}
+		}
 
-        for (let topping of toppings) {
-            const toppingExists = await Topping.findById(topping);
-            if (!toppingExists) {
-                return res.status(400).json({ message: 'Topping not found' });
-            }
-        }
+		const newPizza = await Pizza.create({ name: name, toppings });
+		res.status(201).json({
+			pizza: newPizza,
+			message: `${name} created successfully`,
+		});
+	} catch (error) {
+		return next(error);
+	}
+};
 
-        const newPizza = await Pizza.create({ name: name, toppings });
-        res.status(201).json(newPizza);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
+const updatePizza = async (req, res, next) => {
+	const { id } = req.params;
+	const { name, toppings } = req.body;
+	try {
+		if (!name) {
+			const err = new Error("Name is required");
+			err.status = 400;
+			return next(err);
+		}
 
-const updatePizza = async (req, res) => {
-    const { id } = req.params;
-    const { name, toppings } = req.body;
-    try {
-        if (!name || !toppings) {
-            return res.status(400).json({ message: 'Name and toppings are required' });
-        }
+		if (!toppings) {
+			const err = new Error("Toppings are required");
+			err.status = 400;
+			return next(err);
+		}
 
-        const pizza = await Pizza.findById(id);
-        if (!pizza) {
-            return res.status(404).json({ message: 'Pizza not found' });
-        }
+		const pizza = await Pizza.findById(id);
+		if (!pizza) {
+			const err = new Error("Pizza not found");
+			err.status = 404;
+			return next(err);
+		}
 
-        const pizzaExists = await Pizza.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
-        if (pizzaExists && pizzaExists._id.toString() !== id) {
+		for (let topping of toppings) {
+			const toppingExists = await Topping.findById(topping);
+			if (!toppingExists) {
+				const err = new Error(`Topping not found`);
+				err.status = 400;
+				return next(err);
+			}
+		}
 
-            return res.status(400).json({ message: 'Pizza already exists' });
-        }
+		pizza.name = name;
+		pizza.toppings = toppings;
+		await pizza.save();
+		res.status(200).json({
+			pizza: pizza,
+			message: `${name} updated successfully`,
+		});
+	} catch (error) {
+		return next(error);
+	}
+};
 
-        for (let topping of toppings) {
-            const toppingExists = await Topping.findById(topping);
-            if (!toppingExists) {
-                return res.status(400).json({ message: 'Topping not found' });
-            }
-        }
-
-        pizza.name = name;
-        pizza.toppings = toppings;
-        await pizza.save();
-        res.status(200).json(pizza);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
-
-const deletePizza = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const pizza = await Pizza.findByIdAndDelete(id);
-        if (!pizza) {
-            return res.status(404).json({ message: 'Pizza not found' });
-        }
-        res.status(200).json({ message: 'Pizza deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
+const deletePizza = async (req, res, next) => {
+	const { id } = req.params;
+	try {
+		const pizza = await Pizza.findByIdAndDelete(id);
+		if (!pizza) {
+			const err = new Error("Pizza not found");
+			err.status = 404;
+			return next(err);
+		}
+		res.status(200).json({ message: `${pizza.name} deleted successfully` });
+	} catch (error) {
+		return next(error);
+	}
+};
 
 export { getAllPizzas, createPizza, updatePizza, deletePizza };
