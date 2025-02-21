@@ -21,7 +21,6 @@ const usePizzaApi = () => {
 	const getAllPizzas = async () => {
 		setError(null);
 		try {
-			console.log("search", search);
 			const response = await axiosInstance.get(
 				`${API_URL}/pizzas/${search ? `?search=${search}` : ""}`
 			);
